@@ -175,10 +175,6 @@ def build_personalized_prompt(user_input, preferences):
 # ROUTES
 # ─────────────────────────────────────────────
 
-@app.route("/")
-def welcome():
-    return render_template("welcome.html")
-
 @app.route("/login")
 def login():
     firebase_config = {
@@ -191,6 +187,10 @@ def login():
         "measurementId": os.getenv("FIREBASE_MEASUREMENT_ID")
     }
     return render_template("login.html", firebase_config=firebase_config)
+
+@app.route("/")
+def welcome():
+    return render_template("welcome.html")
 
 
 @app.route("/preference", methods=["GET", "POST"])
