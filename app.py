@@ -175,7 +175,7 @@ def build_personalized_prompt(user_input, preferences):
 # ROUTES
 # ─────────────────────────────────────────────
 
-@app.route("/welcome")
+@app.route("/")
 def welcome():
     return render_template("welcome.html")
 
