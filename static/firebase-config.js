@@ -2,7 +2,7 @@ import { initializeApp } from "https://www.gstatic.com/firebasejs/9.6.1/firebase
 import { getAuth } from "https://www.gstatic.com/firebasejs/9.6.1/firebase-auth.js";
 
 const firebaseConfig = {
-  apiKey: "AIzaSyDz-CG5_66swMBIxRZgsR09Z3w8Hsa2EpY",
+  apiKey: "",
   authDomain: "aitinerary-2f93e.firebaseapp.com",
   projectId: "aitinerary-2f93e",
   storageBucket: "aitinerary-2f93e.firebasestorage.app",
