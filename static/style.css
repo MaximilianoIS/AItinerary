@@ -1,0 +1,1149 @@
+:root {
+  /* iOS System Colors (Light Mode Defaults) */
+  --ios-bg-primary:    #ffffff;
+  --ios-bg-secondary:  #f2f2f7;
+  --ios-separator:     #c6c6c8;
+/*  --ios-tint:          #1e88e5; */
+  --ios-tint:          #1a5383;
+  --ios-text-primary:  #000000;
+  --ios-text-secondary:#3c3c43;
+
+  /* Typography */
+  --font-size-large-title: 34px;
+  --font-size-title2:      22px;
+  --font-size-title3:      20px;
+  --font-size-headline:    17px;
+  --font-size-body:        17px;
+  --font-size-callout:     16px;
+  --font-size-subhead:     15px;
+  --font-size-footnote:    13px;
+
+  /* Corners */
+  --ios-radius-small:  6px;
+  --ios-radius-medium: 10px;
+  --ios-radius-large:  16px;
+
+  /* Hairline border */
+  --hairline: 0.5px;
+}
+
+/* Global Reset and Base */
+*, *::before, *::after {
+  box-sizing: border-box;
+}
+
+.page-wrapper {
+  max-width: none;
+  margin: 0;
+  padding: 0;
+}
+
+
+html, body {
+  margin: 0;
+  padding: env(safe-area-inset-top, 0px) env(safe-area-inset-right, 0px) env(safe-area-inset-bottom, 0px) env(safe-area-inset-left, 0px);
+  min-height: 100vh; /* Ensures full viewport height */
+  height: auto; /* Allows content to grow */
+  font-family: "Outfit", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif !important;
+  font-size: var(--font-size-body, 16px); /* Fallback to 16px */
+  background-color: var(--ios-bg-primary, #ffffff); /* Fallback for unsupported custom props */
+  color: var(--ios-text-primary, #000000); /* Fallback text color */
+  -webkit-text-size-adjust: 100%;
+  transition: background-color 0.3s ease, color 0.3s ease;
+  overflow-x: hidden; /* Prevent horizontal scroll */
+}
+
+
+* {
+  font-family: inherit;
+}
+
+body > main {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+}
+
+/* Dark Mode Overrides */
+body.dark-mode {
+  /* Dark Mode - Soft Gray Theme */
+  --ios-bg-primary:    #212121;
+  --ios-bg-secondary:  #363333;
+  --ios-separator:     #333333;
+  --ios-tint:          #4da6ff;
+  --ios-text-primary:  #e0e0e0;
+  --ios-text-secondary:#888888;
+}
+
+
+
+/* === Navbar === */
+.navbar {
+  position: sticky;
+  top: 0;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 67px;
+  padding: 0 1em;
+  background-color: rgba(255, 255, 255, 0.75);
+  backdrop-filter: blur(20px);
+  border-bottom: var(--hairline) solid var(--ios-separator);
+  z-index: 10;
+}
+
+
+/* Dark mode override */
+body.dark-mode .navbar {
+  background-color: rgba(18, 18, 18, 0.75); /* match --ios-bg-primary with transparency */
+}
+
+
+.nav-item {
+  font-size: var(--font-size-body);
+  color: var(--ios-tint);
+  cursor: pointer;
+  padding: 0.5em;
+  transition: background 150ms ease-in-out;
+}
+.nav-item:active {
+  background: rgba(0, 0, 0, 0.05);
+}
+
+/* === Segmented Control === */
+.segmented-control {
+  margin-top: 0px;
+  display: flex;
+  height: 36px;
+  padding: 2px;
+  gap: 2px;
+  max-width: 600px;
+  width: 100%;
+  background-color: var(--ios-bg-secondary);
+  border: var(--hairline) solid var(--ios-separator);
+  border-radius: var(--ios-radius-large);
+}
+
+.segment {
+  flex: 1;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0 12px;
+  font-size: var(--font-size-body);
+  color: var(--ios-tint);
+  background: transparent;
+  border: none;
+  cursor: pointer;
+  transition: background 150ms, color 150ms;
+}
+.segment.active {
+  background-color: var(--ios-bg-primary);
+  color: var(--ios-text-primary);
+  border-radius: 9999px;
+}
+.segment:hover:not(.active),
+.segment:active:not(.active) {
+  background-color: rgba(0, 0, 0, 0.05);
+}
+.segment:focus {
+  outline: none;
+}
+
+/* === Welcome Page === */
+.welcome-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: flex-start;
+  height: 100vh;
+  padding: 22vh 1em 1em;
+  text-align: center;
+  background-color: var(--ios-bg-primary);
+  opacity: 1;
+  transform: scale(1);
+  transition: opacity 0.4s ease, transform 0.5s ease;
+}
+
+.welcome-container.fade-out {
+  opacity: 0;
+  transform: scale(0.2);
+  pointer-events: none;
+}
+
+
+/* === Button === */
+.btn {
+  display: inline-block;
+  padding: 0.75em 1.5em;
+  font-size: var(--font-size-callout);
+  font-weight: 600;
+  color: #fff;
+  background-color: var(--ios-tint);
+  border: none;
+  border-radius: var(--ios-radius-large);
+  text-decoration: none;
+  text-align: center;
+  user-select: none;
+  transition: opacity 150ms ease-in-out, transform 150ms ease-in-out, background-color 0.2s ease;
+}
+.btn:active {
+  opacity: 0.7;
+  transform: scale(0.98);
+}
+.btn:hover {
+  background-color: color-mix(in srgb, var(--ios-tint) 85%, black);
+}
+
+
+/* === Prompt Bar === */
+.prompt-bar {
+  display: flex;
+  align-items: center;
+  width: 100%;
+  max-width: 600px;
+  height: 48px;
+  padding: 0 16px;
+  background-color: var(--ios-bg-secondary);
+  border: var(--hairline) solid var(--ios-separator);
+  border-radius: var(--ios-radius-large);
+  box-sizing: border-box;
+  margin-top: 1em;
+}
+.prompt-bar .icon {
+  flex: none;
+  width: 20px;
+  height: 20px;
+  margin-right: 12px;
+  fill: var(--ios-text-secondary);
+}
+.prompt-bar input {
+  flex: 1;
+  height: 100%;
+  border: none;
+  background: transparent;
+  color: var(--ios-text-primary);
+  font-size: var(--font-size-body);
+  outline: none;
+}
+.prompt-bar input::placeholder {
+  color: var(--ios-text-secondary);
+}
+
+/* === Content === */
+.content {
+  padding: 1em;
+}
+.section {
+  margin-top: 1.5em;
+}
+.section {
+  display: none;
+}
+.section.active {
+  display: block;
+}
+textarea {
+  width: 100%;
+  min-height: 6em;
+  padding: 0.75em;
+  font-size: var(--font-size-body);
+  color: var(--ios-text-primary);
+  background-color: var(--ios-bg-primary);
+  border: var(--hairline) solid var(--ios-separator);
+  border-radius: var(--ios-radius-small);
+  resize: vertical;
+}
+pre {
+  background-color: var(--ios-bg-primary);
+  padding: 1em;
+  border: var(--hairline) solid var(--ios-separator);
+  border-radius: var(--ios-radius-small);
+  font-family: Menlo, monospace;
+  white-space: pre-wrap;
+  margin: 0;
+}
+
+
+#settings {
+  /* Inherits 'margin-top: 1.5em;' from '.section' */
+  /* Its display is controlled by '.section.active { display: block; }' */
+
+  /* Constrain overall width and center it within the .content container */
+  max-width: 1150px; /* Adjust this value as needed for your preferred width */
+  margin-left: auto;  /* Center the section horizontally */
+  margin-right: auto;
+
+  /* Add internal padding so content within #settings isn't flush to its edges/borders.
+     This padding is *inside* the max-width defined above. */
+  padding-top: 1em;    /* Adds some space at the top, inside the borders */
+  padding-bottom: 1em; /* Adds some space at the bottom, inside the borders */
+  padding-left: 1.5em;   /* Creates space between the left border and content */
+  padding-right: 1.5em;  /* Creates space between the right border and content */
+
+  /* Add the requested visible borders to the #settings section itself */
+  border-left: var(--hairline) solid var(--ios-separator);
+  border-right: var(--hairline) solid var(--ios-separator);
+
+  /* Optional: If you want a full box border around the entire settings section,
+     uncomment the border-top and border-bottom lines.
+     You might also want to add a border-radius if using a full box. */
+  /* border-top: var(--hairline) solid var(--ios-separator); */
+  /* border-bottom: var(--hairline) solid var(--ios-separator); */
+  /* border-radius: var(--ios-radius-medium); */
+
+  /* Optional: A slightly different background for the settings area if desired.
+     This can help visually group the settings content if you use full borders. */
+  /* background-color: var(--ios-bg-secondary); */
+}
+
+/* === Utility Card === */
+.card {
+  background-color: var(--ios-bg-primary);
+  border-radius: var(--ios-radius-medium);
+  border: var(--hairline) solid var(--ios-separator);
+  padding: 1em;
+  box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+}
+
+/* === Map === */
+#map { /* Generic map, can be overridden by more specific selectors like #around-me #around-me-map */
+  height: 100%;
+}
+.map-wrapper { /* Generic map wrapper */
+  height: 70vh;
+  max-height: none;
+  border-radius: var(--ios-radius-large);
+  overflow: hidden;
+  margin: 0.2rem; /* Small margin, might be overridden */
+  border: var(--hairline) solid var(--ios-separator); /* Added border for consistency */
+}
+.map-wrapper #map {
+  width: 100%;
+  height: 100%;
+}
+
+.logo {
+  width: 400px;
+  height: auto;
+  margin-bottom: -7rem;
+}
+
+.tagline {
+  font-size: var(--font-size-title3);
+  color: var(--ios-text-secondary);
+  margin-bottom: 2rem;
+  text-align: center;
+  max-width: 320px;
+}
+
+.image-gallery {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 1rem;
+  margin-top: 1rem;
+}
+
+.image-gallery img {
+  width: 200px;
+  height: 130px;
+  object-fit: cover;
+  border-radius: var(--ios-radius-large);
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  transition: transform 0.3s ease;
+}
+
+.image-gallery img:hover {
+  transform: scale(1.05);
+}
+
+.toggle-switch {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  font-size: 1.1rem;
+  font-weight: 500;
+}
+
+.toggle-switch input {
+  display: none;
+}
+
+.slider { /* This is for the toggle switch, not the range slider */
+  position: relative;
+  width: 50px;
+  height: 26px;
+  background-color: #ccc;
+  border-radius: 999px;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+.slider::before {
+  content: "";
+  position: absolute;
+  height: 20px;
+  width: 20px;
+  left: 3px;
+  top: 3px;
+  background-color: white;
+  border-radius: 50%;
+  transition: transform 0.3s ease;
+}
+
+.toggle-switch input:checked + .slider {
+  background-color: #4CAF50; /* Consider var(--ios-tint) or a success green variable */
+}
+
+.toggle-switch input:checked + .slider::before {
+  transform: translateX(24px);
+}
+
+/* Row layout for each setting */
+
+
+.setting-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  border-bottom: var(--hairline) solid var(--ios-separator);
+  padding: 0.75em 0;
+  font-size: var(--font-size-body);
+  color: var(--ios-text-primary);
+}
+
+.setting-row > span,
+.setting-label {
+  font-weight: normal !important;
+  font-size: 1rem;
+  color: var(--ios-text-primary);
+}
+
+
+.setting-row:last-child {
+  border-bottom: none;
+}
+
+/* Style inputs and selects consistently (but NOT checkboxes!) */
+.setting-row input[type="text"],
+.setting-row select {
+  font-size: var(--font-size-body);
+  color: var(--ios-text-primary);
+  background-color: var(--ios-bg-primary);
+  border: 1px solid var(--ios-separator);
+  border-radius: var(--ios-radius-small);
+  padding: 0.4em 0.6em;
+  min-width: 150px;
+  margin-left: auto;
+}
+
+/* Fix for label elements used as containers (e.g. toggle switches) */
+.setting-row label.toggle-switch {
+  margin-left: auto;
+}
+
+/* Prevent toggle (checkbox) from inheriting form input styling */
+.setting-row input[type="checkbox"] {
+  all: unset;
+}
+
+/* === SETTINGS === */
+
+.settings-group {
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+  margin-bottom: 2em;
+}
+
+.setting-block {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5em;
+}
+
+.setting-label { /* This exists outside .setting-row too */
+  font-weight: 600;
+  font-size: 1rem;
+  color: var(--ios-text-primary); /* Updated from #333 */
+}
+body.dark-mode .setting-label {
+    color: var(--ios-text-primary);
+}
+
+
+.trip-thumbnail {
+  width: 100%;
+  max-width: 180px;
+  border-radius: 12px;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.08);
+}
+
+/* === Dropdown === */
+.custom-dropdown {
+  position: relative;
+  background: var(--ios-bg-secondary); /* Use theme variable */
+  border: var(--hairline) solid var(--ios-separator); /* Use theme variable */
+  border-radius: var(--ios-radius-medium); /* Use theme variable */
+  padding: 0.6em 1em;
+  cursor: pointer;
+  min-width: 220px;
+  max-width: 240px;
+  color: var(--ios-text-primary);
+}
+
+.custom-dropdown .selected-option {
+  font-weight: 450;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  font-size: 1.05rem;
+  color: var(--ios-text-primary);
+}
+
+.dropdown-options {
+  display: none;
+  flex-direction: column;
+  position: absolute;
+  top: 110%;
+  left: 0;
+  right: 0;
+  background: var(--ios-bg-primary); /* Use theme variable */
+  border-radius: var(--ios-radius-medium); /* Use theme variable */
+  border: var(--hairline) solid var(--ios-separator);
+  box-shadow: 0 2px 12px rgba(0, 0, 0, 0.1);
+  z-index: 99;
+}
+
+.custom-dropdown:hover .dropdown-options,
+.custom-dropdown.open .dropdown-options {
+  display: flex;
+}
+
+.dropdown-item {
+  display: flex;
+  align-items: center;
+  gap: 0.65em;
+  padding: 0.6em 1em;
+  font-size: 1.05rem;
+  cursor: pointer;
+  transition: background 0.2s;
+  color: var(--ios-text-primary);
+}
+
+.dropdown-item:hover {
+  background: var(--ios-bg-secondary); /* Lighten for hover */
+}
+body.dark-mode .dropdown-item:hover {
+  background: color-mix(in srgb, var(--ios-bg-secondary) 80%, white);
+}
+
+
+.dropdown-item img {
+  width: 40px;
+  height: 40px;
+  object-fit: contain;
+  flex-shrink: 0;
+}
+
+
+/* Duration Pills */
+.duration-options {
+  display: flex;
+  gap: 0.6em;
+  align-items: center;
+  flex-wrap: wrap;
+}
+
+.duration-pill {
+  background: var(--ios-bg-secondary); /* Use theme variable */
+  border-radius: 20px;
+  padding: 0.4em 1em;
+  font-size: 1.4rem; /* This seems large, ensure it's intended */
+  font-weight: 600;
+  cursor: pointer;
+  transition: background 0.2s;
+  color: var(--ios-text-primary); /* Ensure text is readable */
+}
+
+.duration-pill:hover {
+  background: color-mix(in srgb, var(--ios-bg-secondary) 80%, var(--ios-text-secondary) 10%); /* Adjust hover */
+}
+
+.duration-custom {
+  height: 40px;
+  width: 100px;
+  padding: 0.4em;
+  font-size: var(--font-size-body);
+  border: var(--hairline) solid var(--ios-separator); /* Use theme variable */
+  border-radius: var(--ios-radius-small); /* Use theme variable */
+  text-align: center;
+  background-color: var(--ios-bg-primary);
+  color: var(--ios-text-primary);
+}
+
+.cost-container {
+  display: flex;
+  gap: 0.6em;
+  align-items: center;
+  flex-wrap: wrap;
+}
+
+.cost-input,
+.currency-select {
+  height: 42px;
+  padding: 0.5em 1em;
+  font-size: var(--font-size-body);
+  border: 1px solid var(--ios-separator);
+  border-radius: var(--ios-radius-small);
+  background-color: var(--ios-bg-primary);
+  color: var(--ios-text-primary);
+}
+
+.currency-select {
+  min-width: 50px;
+  max-width: 110px;
+}
+
+
+/* === Traveler Dropdown: Dark Mode Fix === */
+/* These rules are largely integrated above by using CSS variables directly. */
+/* Kept for explicitness if needed, but some might be redundant. */
+body.dark-mode .custom-dropdown {
+  background-color: var(--ios-bg-primary);
+  color: var(--ios-text-primary);
+  border-color: var(--ios-separator);
+}
+
+body.dark-mode .custom-dropdown .selected-option {
+  color: var(--ios-text-primary);
+}
+
+/* Override for dropdown options to ensure they are light in dark mode if desired,
+   or use dark mode variables if they should follow the theme.
+   The current generic .dropdown-options uses var(--ios-bg-primary), which is correct.
+   This specific override forces white always. Let's keep it consistent with the theme.
+*/
+body.dark-mode .dropdown-options {
+  background-color: var(--ios-bg-primary); /* Was #ffffff */
+  color: var(--ios-text-primary);           /* Was #000000 */
+  border-color: var(--ios-separator);       /* Was #ccc */
+}
+
+body.dark-mode .dropdown-item {
+  color: var(--ios-text-primary); /* Was #000000 */
+}
+
+body.dark-mode .dropdown-item img {
+  filter: none; /* If images have dark elements, they might need inversion or a light version for dark mode */
+}
+/* Hover for dark mode dropdown item already handled by generic .dropdown-item:hover */
+
+
+/* === IMPACT === */
+
+.impact-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); /* Responsive columns */
+  gap: 1rem;
+}
+
+
+.impact-tile {
+  display: flex;
+  flex-direction: column; /* Changed to column for better text flow with potentially wrapped labels */
+  align-items: flex-start; /* Align items to start */
+  gap: 0.5rem; /* Adjusted gap */
+  background-color: var(--ios-bg-secondary);
+  padding: 1rem;
+  border-radius: var(--ios-radius-medium);
+  box-shadow: 0 1px 5px rgba(0, 0, 0, 0.06);
+  min-height: 100px; /* Adjusted min-height */
+}
+.impact-tile-header { /* New wrapper for icon and label if side-by-side desired */
+    display: flex;
+    align-items: center;
+    gap: 0.8rem;
+    width: 100%;
+}
+
+
+.impact-icon {
+  width: 40px; /* Adjusted size */
+  height: 40px;
+  flex-shrink: 0;
+}
+
+.impact-text-content { /* New wrapper for text if icon is separate */
+    display: flex;
+    flex-direction: column;
+}
+
+.impact-label {
+  font-size: var(--font-size-subhead);
+  color: var(--ios-text-secondary);
+}
+
+.impact-value {
+  font-weight: 600;
+  font-size: var(--font-size-body);
+  color: var(--ios-text-primary);
+}
+
+.impact-note {
+  font-size: 0.85rem;
+  color: var(--ios-text-secondary);
+  margin-top: 0.3em;
+}
+
+/* === Header of settings === */
+
+.top-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 1em 0;
+  margin-bottom: 2em;
+  border-bottom: var(--hairline) solid var(--ios-separator);
+}
+
+.welcome-left {
+  display: flex;
+  align-items: center;
+  gap: 1em;
+}
+
+.profile-avatar {
+  width: 56px;
+  height: 56px;
+  border-radius: 50%;
+  object-fit: cover;
+  border: 2px solid var(--ios-separator);
+}
+
+.welcome-text {
+  display: flex;
+  flex-direction: column;
+}
+
+.welcome-greeting {
+  font-size: 1rem;
+  color: var(--ios-text-secondary);
+}
+
+.welcome-name {
+  font-size: 1.8rem;
+  font-weight: 700;
+  color: var(--ios-text-primary);
+}
+
+.profile-actions {
+  display: flex;
+  gap: 1.5em;
+}
+
+.profile-link {
+  text-decoration: none;
+  font-weight: 600;
+  color: var(--ios-tint);
+  font-size: 1.1rem;
+}
+.profile-link:hover {
+  opacity: 0.8;
+}
+
+/* === AUTHENTICATION PAGE STYLES (Login/Signup) === */
+.auth-page-wrapper {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 100vh;
+  background-color: var(--ios-bg-secondary);
+  padding: 1em;
+}
+
+.auth-card {
+  background-color: var(--ios-bg-primary);
+  padding: 2em;
+  border-radius: var(--ios-radius-large);
+  border: var(--hairline) solid var(--ios-separator);
+  box-shadow: 0 8px 24px rgba(0,0,0,0.1);
+  width: 100%;
+  max-width: 420px;
+  box-sizing: border-box;
+}
+
+.auth-tabs {
+  display: flex;
+  justify-content: space-around;
+  margin-bottom: 1.5em;
+  border-bottom: var(--hairline) solid var(--ios-separator);
+  padding-bottom: 1em;
+}
+
+.auth-tab-button {
+  font-size: var(--font-size-headline);
+  font-weight: 600;
+  padding: 0.5em 1em;
+  border: none;
+  background-color: transparent;
+  color: var(--ios-text-secondary);
+  border-radius: var(--ios-radius-medium);
+  cursor: pointer;
+  transition: color 0.2s ease, background-color 0.2s ease, box-shadow 0.2s ease;
+}
+
+.auth-tab-button.active {
+  color: var(--ios-tint);
+   box-shadow: 0 2px 0 0 var(--ios-tint);
+}
+.auth-tab-button:not(.active):hover {
+  color: var(--ios-text-primary);
+}
+
+
+.auth-form {
+  display: flex;
+  flex-direction: column;
+  gap: 1.25em;
+}
+.auth-form.hidden {
+    display: none;
+}
+
+
+.auth-form .form-group {
+  display: flex;
+  flex-direction: column;
+  text-align: left;
+  gap: 0.4em;
+  position: relative;
+}
+
+.auth-form .form-group label {
+  font-size: var(--font-size-subhead);
+  color: var(--ios-text-secondary);
+  font-weight: 500;
+  padding-left: 0.25em;
+}
+
+.auth-form .form-group .input-icon {
+  position: absolute;
+  left: 12px;
+  top: 50%;
+  transform: translateY(-50%);
+  color: var(--ios-text-secondary);
+  opacity: 0.7;
+  font-size: 0.9em;
+  pointer-events: none;
+}
+
+.auth-form .form-group input[type="text"],
+.auth-form .form-group input[type="email"],
+.auth-form .form-group input[type="password"] {
+  width: 100%;
+  padding: 0.8em 1em 0.8em 2.5em;
+  font-size: var(--font-size-body);
+  color: var(--ios-text-primary);
+  background-color: var(--ios-bg-secondary);
+  border: var(--hairline) solid var(--ios-separator);
+  border-radius: var(--ios-radius-medium);
+  outline: none;
+  box-sizing: border-box;
+  transition: border-color 0.2s ease, box-shadow 0.2s ease, background-color 0.2s ease;
+}
+
+.auth-form .form-group input[type="text"]:focus,
+.auth-form .form-group input[type="email"]:focus,
+.auth-form .form-group input[type="password"]:focus {
+  border-color: var(--ios-tint);
+  background-color: var(--ios-bg-primary);
+  box-shadow: 0 0 0 3px color-mix(in srgb, var(--ios-tint) 15%, transparent);
+}
+.auth-form .form-group input[type="text"]::placeholder,
+.auth-form .form-group input[type="email"]::placeholder,
+.auth-form .form-group input[type="password"]::placeholder {
+    color: var(--ios-text-secondary);
+    opacity: 0.8;
+}
+
+
+.auth-form .btn {
+  width: 100%;
+  margin-top: 0.5em;
+  padding-top: 0.85em;
+  padding-bottom: 0.85em;
+  font-size: var(--font-size-body);
+}
+
+.auth-form .error-message {
+  color: #e74c3c; /* Consider a CSS variable for error color */
+  font-size: var(--font-size-subhead);
+  text-align: center;
+  min-height: 1.2em;
+  margin-top: -0.5em;
+  margin-bottom: 0.5em;
+}
+
+/* Dark mode specific adjustments for auth */
+body.dark-mode .auth-tab-button.active {
+  color: var(--ios-tint);
+  box-shadow: 0 2px 0 0 var(--ios-tint);
+}
+body.dark-mode .auth-tab-button:not(.active):hover {
+  color: var(--ios-text-primary);
+}
+body.dark-mode .auth-form .form-group input[type="text"],
+body.dark-mode .auth-form .form-group input[type="email"],
+body.dark-mode .auth-form .form-group input[type="password"] {
+    background-color: var(--ios-bg-secondary);
+    border-color: color-mix(in srgb, var(--ios-separator) 80%, black);
+}
+body.dark-mode .auth-form .form-group input[type="text"]:focus,
+body.dark-mode .auth-form .form-group input[type="email"]:focus,
+body.dark-mode .auth-form .form-group input[type="password"]:focus {
+    background-color: color-mix(in srgb, var(--ios-bg-primary) 95%, black);
+    border-color: var(--ios-tint);
+    box-shadow: 0 0 0 3px color-mix(in srgb, var(--ios-tint) 25%, transparent);
+}
+
+/* static/around-me.css - UPDATED STYLES FOR AROUND ME TAB */
+
+/* static/around-me.css - FINAL UPDATED: extra margins & refined card design */
+
+/* 1) Wrapper: centered, generous margins, pale gray background */
+#around-me .around-me-content-wrapper {
+  font-family: "Outfit", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  max-width: 1000px;
+  margin: 3rem auto;            /* large vertical margins and centered horizontally */
+  padding: 1rem;               /* generous inner padding */
+  background-color: #f0f0ed;   /* soft pale gray */
+  border-radius: var(--ios-radius-large);
+  box-shadow: 0 2px 16px rgba(0, 0, 0, 0.05);
+}
+
+/* 2) Map: fills wrapper width */
+#around-me .around-me-map-canvas {
+  width: 100%;
+  height: 70vh;
+  min-height: 400px;
+  border: 2px solid var(--ios-separator);
+  border-radius: var(--ios-radius-large);
+  overflow: hidden;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+}
+
+/* 3) Controls: spaced below map */
+#around-me .around-me-controls {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: flex-start;
+  gap: 1.5rem;
+  margin-top: 2.5rem;
+}
+
+/* 4) Slider container */
+#around-me #radius-slider-container {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  color: var(--ios-text-primary);
+  font-size: var(--font-size-subhead);
+  font-weight: 600;
+}
+
+/* 5) Slider track: thicker & glowing */
+#around-me #radius-slider {
+  -webkit-appearance: none;
+  appearance: none;
+  width: 240px;
+  height: 14px;
+  background: color-mix(in srgb, var(--ios-accent) 25%, var(--ios-bg-secondary));
+  border-radius: 7px;
+  box-shadow: inset 0 0 12px rgba(0, 0, 0, 0.1);
+  cursor: pointer;
+  transition: box-shadow 0.2s;
+}
+#around-me #radius-slider:hover {
+  box-shadow: inset 0 0 14px rgba(0, 0, 0, 0.15), 0 0 12px var(--ios-accent);
+}
+
+/* 6) Slider thumb (ball): larger, glowing */
+#around-me #radius-slider::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  appearance: none;
+  width: 32px;
+  height: 32px;
+  background: #215e9a;
+  border: 4px solid #fff;
+  border-radius: 50%;
+  box-shadow: 0 0 18px var(--ios-accent);
+  cursor: grab;
+  margin-top: -2px; /* center on track */
+  transition: box-shadow 0.2s;
+}
+#around-me #radius-slider:active::-webkit-slider-thumb {
+  box-shadow: 0 0 24px var(--ios-accent);
+  cursor: grabbing;
+}
+/* Firefox support */
+#around-me #radius-slider::-moz-range-track {
+  height: 14px;
+  background: color-mix(in srgb, var(--ios-accent) 25%, var(--ios-bg-secondary));
+  border-radius: 7px;
+}
+#around-me #radius-slider::-moz-range-progress {
+  background: var(--ios-accent);
+  height: 14px;
+  border-radius: 7px;
+}
+#around-me #radius-slider::-moz-range-thumb {
+  width: 32px;
+  height: 32px;
+  background: var(--ios-accent);
+  border: 4px solid #fff;
+  border-radius: 50%;
+  box-shadow: 0 0 18px var(--ios-accent);
+  cursor: grab;
+}
+
+/* 7) Button style strong (assumes global .btn) */
+#around-me #use-my-location {
+  padding: 0.75rem 1.5rem;
+  font-size: var(--font-size-callout);
+  border-radius: var(--ios-radius-large);
+  box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+}
+
+/* 8) Status message area */
+#around-me #around-me-status {
+  margin-top: 2rem;
+  text-align: center;
+  color: var(--ios-text-secondary);
+  font-style: italic;
+}
+
+/* 9) Card styles: full card markup preserved, design refined */
+#around-me .around-me-card {
+  width: 100%;
+  max-width: 360px;
+  margin: 3rem auto;
+  padding: 2rem;
+  background-color: #fff; /* bright card */
+  border: var(--hairline) solid var(--ios-separator);
+  border-radius: var(--ios-radius-large);
+  box-shadow: 0 4px 12px rgba(0,0,0,0.08);
+}
+#around-me .around-me-card h3,
+#around-me .around-me-card h4 {
+  margin-top: 0;
+  margin-bottom: 1rem;
+  font-size: var(--font-size-headline);
+  color: var(--ios-text-primary);
+}
+#around-me .around-me-card p {
+  margin-bottom: 1rem;
+  color: var(--ios-text-secondary);
+  line-height: 1.4;
+}
+#around-me .around-me-card button {
+  display: block;
+  width: 100%;
+  padding: 0.75rem;
+  background-color: var(--ios-tint);
+  color: #fff;
+  border: none;
+  border-radius: var(--ios-radius-medium);
+  font-size: var(--font-size-callout);
+  font-weight: 600;
+  cursor: pointer;
+  transition: background-color 0.2s;
+}
+#around-me .around-me-card button:hover {
+  background-color: color-mix(in srgb, var(--ios-tint) 85%, black);
+}
+
+/* INFOWINDOW CARD */
+#around-me .gm-style .gm-style-iw-c {
+  border-radius: var(--ios-radius-large) var(--ios-radius-large) 0 0 !important;
+  padding: 0 !important;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15) !important;
+  background-color: var(--ios-bg-primary) !important;
+}
+#around-me .gm-style .gm-style-iw-d { overflow: hidden !important; }
+#around-me .gm-style .gm-ui-hover-effect { background-color: var(--ios-bg-secondary) !important; }
+
+#around-me #iw-content-container {
+  padding: 0rem 1.25rem 1rem; /* reduced top padding to lift content */
+  font-family: "Outfit", sans-serif;
+}
+#around-me #iw-content-container h4 {
+  margin: 0 0 0.5rem;
+  font-size: var(--font-size-callout-xlarge);
+  font-weight: 600;
+  color: var(--ios-text-primary);
+}
+#around-me #iw-content-container p#iw-city-details {
+  margin: 0 0 1rem;
+  font-size: var(--font-size-subhead);
+  color: var(--ios-text-secondary);
+  line-height: 1.4;
+}
+#around-me #iw-slideshow-container {
+  position: relative;
+  width: 100%;
+  height: 200px;
+  overflow: hidden;
+  border-radius: var(--ios-radius-medium);
+  background-color: var(--ios-bg-secondary);
+  margin-bottom: 1rem;
+}
+#around-me #iw-slideshow-images {
+  display: flex;
+  height: 100%;
+}
+#around-me .iw-slide-btn {
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 32px;
+  height: 32px;
+  background-color: var(--ios-bg-secondary);
+  border: 1px solid var(--ios-separator);
+  border-radius: 50%;
+  cursor: pointer;
+  transition: background-color 0.2s;
+}
+#around-me .iw-slide-btn:hover { background-color: var(--ios-bg-button-hover); }
+#around-me #iw-prev-slide { left: 8px; }
+#around-me #iw-next-slide { right: 8px; }
+#around-me #iw-add-to-trip {
+  display: block;
+  width: 100%;
+  padding: 0.75rem 0;
+  background-color: var(--ios-tint);
+  color: #fff;
+  text-align: center;
+  font-size: var(--font-size-subhead);
+  font-weight: 600;
+  border: none;
+  border-radius: var(--ios-radius-medium);
+  cursor: pointer;
+  transition: background-color 0.2s;
+}
+#around-me #iw-add-to-trip:hover {
+  background-color: color-mix(in srgb, var(--ios-tint) 85%, black);
+}
+
+/* Only make the Log Out button red */
+#logout-btn {
+  background-color: #e74c3c;   /* vivid red */
+  color: #fff;
+  border: none;
+}
+
+#logout-btn:hover {
+  background-color: #c0392b;   /* darker red on hover */
+}

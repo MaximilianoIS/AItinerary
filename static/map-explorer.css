@@ -1,0 +1,1613 @@
+
+/* Basic styles to integrate with dashboard */
+.itinerary-display-area .map-container {
+    position: relative; /* Needed for absolute positioning of controls */
+    width: 100%;
+    height: 100%; /* Fill the container */
+    overflow: hidden; /* Hide parts of controls if needed */
+    border-radius: var(--ios-radius-large); /* Match parent container's radius */
+}
+
+/* The actual map div */
+.itinerary-display-area #map {
+    width: 100%;
+    height: 100%;
+}
+
+/* Overlay Controls Container (Mode Toggle, Error) */
+.map-controls-overlay { /* Renamed from search-container */
+    position: absolute;
+    top: 15px;
+    left: 50%;
+    transform: translateX(-50%);
+    display: flex;
+    align-items: center;
+    gap: 15px;
+    background-color: rgba(var(--rgb-bg-secondary), 0.85);
+    backdrop-filter: saturate(180%) blur(10px);
+    -webkit-backdrop-filter: saturate(180%) blur(10px);
+    padding: 8px 15px;
+    border-radius: var(--ios-radius-large);
+    box-shadow: var(--shadow-medium);
+    z-index: 5;
+    border: var(--hairline) solid var(--ios-separator);
+    transition: background-color 0.3s, border-color 0.3s;
+}
+body.dark-mode .map-controls-overlay {
+     background-color: rgba(var(--rgb-bg-secondary), 0.85);
+}
+
+
+
+/* Error Message on Map */
+.map-error { /* Added class */
+    color: #dc3545; /* Red color for errors */
+    font-size: 0.85rem;
+    font-weight: 500;
+    max-width: 200px;
+}
+
+/* Reset Map Button */
+.reset-button {
+    position: absolute;
+    bottom: 110px; /* Adjust position relative to carousel */
+    right: 15px;
+    background-color: rgba(var(--rgb-bg-primary), 0.8);
+    backdrop-filter: saturate(180%) blur(10px);
+    border: var(--hairline) solid var(--ios-separator);
+    border-radius: 50%;
+    width: 40px;
+    height: 40px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    box-shadow: var(--shadow-medium);
+    z-index: 5;
+    color: var(--ios-text-primary);
+    font-size: 1rem;
+    transition: background-color 0.2s, transform 0.2s, color 0.3s, border-color 0.3s;
+}
+.reset-button:hover {
+    background-color: rgba(var(--rgb-bg-secondary), 0.9);
+}
+.reset-button:active {
+    transform: scale(0.95);
+}
+
+/* Card Carousel */
+.card-carousel {
+    position: absolute;
+    bottom: 15px;
+    left: 15px;
+    right: 15px;
+    height: 110px; /* Adjust height as needed */
+    z-index: 5;
+    overflow: hidden;
+    display: none; /* Hidden by default, shown by JS */
+}
+.card-container {
+    display: flex;
+    overflow-x: auto;
+    scroll-behavior: smooth;
+    padding-bottom: 15px; /* Space for scrollbar if needed, hides it */
+    margin-bottom: -15px; /* Counteract padding */
+    gap: 10px;
+    height: 100%;
+    /* Hide scrollbar */
+    -ms-overflow-style: none;  /* IE and Edge */
+    scrollbar-width: none;  /* Firefox */
+}
+.card-container::-webkit-scrollbar { display: none; } /* Chrome, Safari, Opera */
+
+/* Location Card */
+.location-card {
+    flex: 0 0 240px; /* Fixed width, don't shrink or grow */
+    max-width: 240px;
+    height: 85px; /* Adjust height */
+    background-color: var(--ios-bg-primary);
+    border-radius: var(--ios-radius-medium);
+    border: var(--hairline) solid var(--ios-separator);
+    box-shadow: var(--shadow-subtle);
+    overflow: hidden;
+    cursor: pointer;
+    display: flex;
+    opacity: 0.7;
+    transition: opacity 0.3s, transform 0.3s, border-color 0.3s, background-color 0.3s;
+    position: relative; /* For badges */
+}
+.location-card:hover {
+    opacity: 0.9;
+}
+.location-card.card-active {
+    opacity: 1;
+    transform: scale(1.03); /* Slightly larger when active */
+    border: 1.5px solid var(--ios-tint);
+    box-shadow: var(--shadow-medium);
+}
+.card-image {
+    width: 85px; /* Square image area */
+    height: 100%;
+    background-size: cover;
+    background-position: center;
+    flex-shrink: 0;
+}
+.card-content {
+    padding: 8px 10px;
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+    justify-content: center; /* Center content vertically */
+    flex-grow: 1;
+}
+.card-title {
+    font-size: 0.9rem;
+    font-weight: 600;
+    color: var(--ios-text-primary);
+    margin: 0 0 3px 0;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    transition: color 0.3s;
+}
+.card-description {
+    font-size: 0.75rem;
+    color: var(--ios-text-secondary);
+    margin: 0;
+    line-height: 1.3;
+    max-height: 2.6em; /* Limit to 2 lines */
+    overflow: hidden;
+    text-overflow: ellipsis;
+    display: -webkit-box;
+    -webkit-box-orient: vertical;
+    transition: color 0.3s;
+}
+.card-coordinates { display: none; } /* Hide coords for cleaner look */
+.card-duration {
+    font-size: 0.7rem;
+    color: var(--ios-text-secondary);
+    margin-top: 3px;
+}
+.card-duration i { margin-right: 3px; }
+
+/* Badges for Planner Mode Cards */
+.card-sequence-badge, .card-time-badge {
+    position: absolute;
+    top: 5px;
+    background-color: rgba(0,0,0,0.6);
+    color: white;
+    font-size: 0.7rem;
+    font-weight: bold;
+    padding: 2px 5px;
+    border-radius: 4px;
+    z-index: 1;
+}
+.card-sequence-badge { left: 5px; }
+.card-time-badge { right: 5px; }
+
+
+/* Carousel Controls */
+.carousel-controls {
+    position: absolute;
+    bottom: 0px; /* Lower controls slightly */
+    left: 50%;
+    transform: translateX(-50%);
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    z-index: 6; /* Above cards */
+}
+.carousel-arrow {
+    background: none;
+    border: none;
+    color: var(--ios-text-primary);
+    font-size: 1.1rem;
+    cursor: pointer;
+    padding: 5px;
+    opacity: 0.7;
+    transition: opacity 0.2s, color 0.3s;
+}
+.carousel-arrow:hover { opacity: 1; }
+.carousel-indicators { display: flex; gap: 6px; }
+.carousel-dot {
+    width: 7px;
+    height: 7px;
+    background-color: var(--ios-separator);
+    border-radius: 50%;
+    cursor: pointer;
+    transition: background-color 0.3s;
+}
+.carousel-dot.active { background-color: var(--ios-tint); }
+
+/* Map Popup */
+.popup-container {
+    position: absolute;
+    transform: translate(-50%, -110%); /* Position above marker */
+    z-index: 10; /* Above markers */
+}
+.popup-bubble {
+    background: rgba(var(--rgb-bg-primary), 0.9);
+    backdrop-filter: saturate(180%) blur(10px);
+    padding: 10px 15px;
+    border-radius: var(--ios-radius-medium);
+    box-shadow: var(--shadow-medium);
+    border: var(--hairline) solid var(--ios-separator);
+    max-width: 250px;
+    font-size: 0.9rem;
+    color: var(--ios-text-primary);
+    transition: background-color 0.3s, border-color 0.3s, color 0.3s;
+}
+.popup-bubble b {
+    font-weight: 600;
+    display: block;
+    margin-bottom: 4px;
+}
+
+/* Spinner */
+.map-spinner { /* Renamed ID */
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    z-index: 20;
+    /* Add visual spinner styles */
+}
+.map-spinner.hidden { display: none; }
+
+.spinner-visual { /* Example simple spinner */
+    border: 4px solid rgba(var(--rgb-text-primary), 0.1);
+    border-left-color: var(--ios-tint);
+    border-radius: 50%;
+    width: 30px;
+    height: 30px;
+    animation: spin 1s linear infinite;
+}
+@keyframes spin {
+    to { transform: rotate(360deg); }
+}
+
+
+/* Timeline Panel */
+.timeline-container {
+    position: fixed; /* Or absolute if constrained within parent */
+    top: 0;
+    right: -380px; /* Start off-screen */
+    width: 360px; /* Adjust width */
+    height: 100%;
+    background-color: var(--ios-bg-secondary);
+    border-left: var(--hairline) solid var(--ios-separator);
+    box-shadow: -2px 0 15px rgba(0,0,0,0.1);
+    z-index: 15;
+    display: none; /* Hidden by default */
+    flex-direction: column;
+    transition: right 0.3s ease-in-out, background-color 0.3s, border-color 0.3s;
+}
+.timeline-container.visible {
+    right: 0; /* Slide in */
+}
+.timeline-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 15px 20px;
+    border-bottom: var(--hairline) solid var(--ios-separator);
+    flex-shrink: 0;
+     transition: border-color 0.3s;
+}
+.timeline-header h3 {
+    margin: 0;
+    font-size: 1.1rem;
+    font-weight: 600;
+    color: var(--ios-text-primary);
+    transition: color 0.3s;
+}
+.timeline-actions button {
+    background: none;
+    border: none;
+    color: var(--ios-tint);
+    font-size: 1rem;
+    cursor: pointer;
+    padding: 5px;
+    margin-left: 10px;
+    transition: color 0.3s;
+}
+.timeline {
+    flex-grow: 1;
+    overflow-y: auto;
+    padding: 20px;
+}
+.timeline-item {
+    display: flex;
+    position: relative;
+    margin-bottom: 10px; /* Space below item */
+}
+.timeline-time {
+    flex-basis: 60px;
+    flex-shrink: 0;
+    font-size: 0.8rem;
+    font-weight: 600;
+    color: var(--ios-text-secondary);
+    padding-right: 10px;
+    padding-top: 2px;
+    transition: color 0.3s;
+}
+.timeline-connector {
+    flex-basis: 20px;
+    flex-shrink: 0;
+    position: relative;
+    margin-right: 15px;
+}
+.timeline-dot {
+    width: 12px;
+    height: 12px;
+    background-color: var(--ios-tint);
+    border-radius: 50%;
+    position: absolute;
+    left: 50%;
+    transform: translateX(-50%);
+    top: 4px; /* Align with text */
+    transition: background-color 0.3s;
+}
+.timeline-line {
+    width: 2px;
+    background-color: var(--ios-separator);
+    position: absolute;
+    left: 50%;
+    transform: translateX(-50%);
+    top: 16px; /* Start below dot */
+    bottom: -10px; /* Extend below item */
+    transition: background-color 0.3s;
+}
+.timeline-item:last-child .timeline-line {
+    display: none; /* No line after last item */
+}
+.timeline-content {
+    background-color: var(--ios-bg-primary);
+    border-radius: var(--ios-radius-medium);
+    padding: 10px 12px;
+    border: var(--hairline) solid var(--ios-separator);
+    flex-grow: 1;
+    cursor: pointer;
+    transition: border-color 0.3s, background-color 0.3s, box-shadow 0.2s;
+}
+.timeline-content:hover {
+    border-color: var(--ios-tint);
+}
+.timeline-content.active {
+     border-color: var(--ios-tint);
+     box-shadow: 0 0 0 1.5px var(--ios-tint);
+}
+
+.timeline-title {
+    font-size: 0.95rem;
+    font-weight: 600;
+    margin-bottom: 4px;
+    color: var(--ios-text-primary);
+    transition: color 0.3s;
+}
+.timeline-description {
+    font-size: 0.85rem;
+    color: var(--ios-text-secondary);
+    line-height: 1.4;
+     transition: color 0.3s;
+}
+.timeline-duration {
+    font-size: 0.75rem;
+    color: var(--ios-text-secondary);
+    margin-top: 5px;
+    opacity: 0.8;
+     transition: color 0.3s;
+}
+.timeline-duration i { margin-right: 4px; }
+
+/* Transport items in timeline */
+.transport-item .timeline-dot { background-color: #aaa; }
+.transport-item .timeline-line { background-color: #ccc; }
+.transport-item .timeline-content {
+    background-color: transparent;
+    border: none;
+    padding: 5px 0 15px 0; /* Adjust padding */
+    cursor: default;
+}
+.transport-item .timeline-title { font-size: 0.85rem; font-weight: 500; color: var(--ios-text-secondary); }
+.transport-item .timeline-title i { margin-right: 6px; color: var(--ios-text-secondary); }
+.transport-item .timeline-duration { margin-top: 2px; font-size: 0.7rem; }
+
+
+/* Mobile specific timeline toggle/overlay */
+.timeline-toggle, .map-overlay { display: none; } /* Hide by default */
+
+/* --- Add @media queries for responsiveness --- */
+@media (max-width: 768px) {
+    /* Example: Adjust layout or controls for smaller screens */
+     .itinerary-display-area .map-container { border-radius: 0; } /* Full width maps */
+
+     /* Show mobile timeline toggle */
+     .timeline-toggle {
+         display: flex; /* Show button */
+         position: fixed; /* Or absolute relative to map container */
+         bottom: 130px; /* Adjust position */
+         right: 15px;
+         background-color: var(--ios-tint);
+         color: white;
+         border: none;
+         border-radius: 50%;
+         width: 50px;
+         height: 50px;
+         align-items: center;
+         justify-content: center;
+         font-size: 1.2rem;
+         box-shadow: var(--shadow-medium);
+         z-index: 16; /* Above timeline */
+         cursor: pointer;
+     }
+
+     .timeline-container {
+         width: 90%; /* Wider on mobile */
+         max-width: 360px;
+         height: 70vh; /* Adjust height */
+         top: auto; /* Position at bottom */
+         bottom: -70vh; /* Start off bottom */
+         left: 50%;
+         transform: translateX(-50%);
+         right: auto;
+         border-left: none;
+         border-top: var(--hairline) solid var(--ios-separator);
+         border-radius: var(--ios-radius-large) var(--ios-radius-large) 0 0;
+         transition: bottom 0.3s ease-in-out; /* Animate bottom */
+     }
+     .timeline-container.visible {
+         bottom: 0; /* Slide up */
+         right: auto; /* Override desktop style */
+     }
+
+     /* Map overlay for mobile timeline */
+     .map-overlay {
+         position: fixed; /* Cover whole screen */
+         top: 0; left: 0; width: 100%; height: 100%;
+         background-color: rgba(0,0,0,0.4);
+         z-index: 14; /* Below timeline */
+         opacity: 0;
+         transition: opacity 0.3s;
+         pointer-events: none; /* Allow clicks through when hidden */
+     }
+     .map-overlay.visible {
+         opacity: 1;
+         pointer-events: auto; /* Block clicks when visible */
+         display: block;
+     }
+
+     /* Adjust card carousel position */
+     .card-carousel { bottom: 10px; left: 10px; right: 10px; height: 100px;}
+     .location-card { height: 75px; flex-basis: 200px; max-width: 200px;}
+     .card-image { width: 75px; }
+     .reset-button { bottom: 125px; right: 10px; } /* Position above toggle */
+
+}
+
+.itinerary-layout {
+  display: flex;
+  gap: 20px;
+  height: 60vh;
+  padding: 20px;
+}
+
+.map-pane {
+  flex: 2;
+  min-width: 60%;
+  border-radius: var(--ios-radius-large);
+  overflow: hidden;
+  position: relative;
+}
+
+.map-pane #map {
+  width: 100%;
+  height: 100%;
+  border-radius: inherit;
+}
+
+.input-pane {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+  gap: 10px;
+}
+
+.input-pane h2 {
+  font-size: 1.2rem;
+  margin-bottom: 5px;
+}
+
+.input-pane textarea {
+  width: 100%;
+  height: 120px;
+  padding: 10px;
+  font-size: 1rem;
+  border-radius: var(--ios-radius-medium);
+  border: var(--hairline) solid var(--ios-separator);
+  resize: none;
+}
+
+.input-pane button {
+  align-self: flex-end;
+  background-color: var(--ios-tint);
+  color: white;
+  border: none;
+  border-radius: 50%;
+  width: 40px;
+  height: 40px;
+  font-size: 1.1rem;
+  cursor: pointer;
+}
+
+.fullscreen-map {
+  width: 100%;
+  height: 100vh;
+  position: relative;
+  border-radius: var(--ios-radius-large);
+  overflow: hidden;
+}
+
+.map-ui-overlay {
+  position: absolute;
+  bottom: 20px;
+  left: 50%;
+  transform: translateX(-50%);
+  background: rgba(0, 0, 0, 0.75);
+  padding: 16px;
+  border-radius: 16px;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  width: 90%;
+  max-width: 600px;
+  color: white;
+}
+
+.map-ui-overlay textarea {
+  width: 100%;
+  height: 100px;
+  resize: none;
+  font-size: 1rem;
+  padding: 10px;
+  border-radius: 10px;
+  border: none;
+}
+
+.carousel-overlay {
+  position: absolute;
+  bottom: 140px;
+  width: 100%;
+  display: flex;
+  justify-content: center;
+}
+
+.card-carousel {
+  width: 90%;
+  max-width: 900px;
+}
+
+/* ── Overall two-column grid ── */
+
+.trips-container {
+    display: grid;
+    grid-template-columns: 2fr 0.7fr;
+    height: calc(100vh - 80px);
+    gap: 1rem;
+    padding: 1rem;
+}
+
+
+/* ── LEFT: map box ── */
+.map-wrapper {
+  position: relative;
+  background: var(--ios-bg-secondary);
+  border-radius: var(--ios-radius-large);
+  overflow: hidden;
+  width: 95%;
+  height: calc(100vh - 160px); /* Leaves space for top and bottom margins */
+  margin: 80px auto 20px auto; /* Center it with space from the day bar */
+  box-shadow:
+    0 4px 12px rgba(0, 0, 0, 0.15),
+    0 12px 28px rgba(0, 0, 0, 0.2),
+    0 24px 36px rgba(0, 0, 0, 0.1);
+  transition: box-shadow 0.3s ease, transform 0.3s ease;
+}
+
+.map-box {
+  width: 100%;
+  height: 100%;
+}
+
+/* static/map-explorer.css */
+
+/* ============================================= */
+/* === MY TRIPS SECTION - OVERALL LAYOUT === */
+/* ============================================= */
+#my-trips.section.active { /* Ensure high specificity to override generic .section display */
+    display: flex !important; /* Use !important if needed to override inline or other conflicting styles */
+    flex-direction: column;
+    height: calc(100vh - 67px); /* Assumes navbar height is 67px (from style.css) */
+    overflow: hidden; /* Prevent scrollbars on the section itself */
+}
+
+/* === Enhanced Day Tabs Container === */
+.day-tabs-bar-container {
+  position: absolute;
+  top: 125px;
+  left: 50%;
+  transform: translateX(-50%);
+  z-index: 10;
+  display: flex;
+  gap: 10px;
+  padding: 10px 18px;
+  background: rgba(255, 255, 255, 0.6);
+  backdrop-filter: blur(12px) saturate(180%);
+  -webkit-backdrop-filter: blur(12px) saturate(180%);
+  border-radius: 16px;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.12);
+  border: 1px solid rgba(200, 200, 200, 0.3);
+}
+
+.day-tabs-bar-container::-webkit-scrollbar {
+    display: none;
+}
+
+/* === Day Tab Buttons === */
+.day-tab {
+    padding: 10px 26px;
+    font-size: 0.95rem;
+    font-weight: 500;
+    border-radius: 12px;
+    border: none;
+    background: transparent;
+    color: var(--ios-text-secondary);
+    transition: all 0.2s ease;
+    white-space: nowrap;
+}
+.day-tab:hover {
+    background: rgba(255, 255, 255, 0.3);
+    color: var(--ios-text-primary);
+}
+.day-tab.active {
+    background: linear-gradient(to right, #144673, #0d3052);
+    color: white;
+    font-weight: 600;
+    box-shadow: 0 3px 8px rgba(0, 0, 0, 0.12);
+}
+
+/* Main Content Area below Day Tabs (for the map) */
+.trips-content-area {
+    flex-grow: 1; /* Takes all remaining vertical space */
+    position: relative; /* For positioning absolute children */
+    overflow: hidden; /* Important for map not to overflow */
+}
+
+/* ============================================= */
+/* === MAP WRAPPER & MAP BOX (My Trips specific) === */
+/* ============================================= */
+/* This targets the map-wrapper specifically within the #my-trips section */
+#my-trips .trips-content-area .map-wrapper {
+    width: 100%;
+    height: 100%; /* Fills .trips-content-area */
+    position: relative; /* For carousel, reset button etc. */
+    background-color: var(--ios-bg-secondary); /* Placeholder background for the map area */
+    border-radius: var(io); /* No border radius for the main map display area */
+    margin: 0; /* Override any generic margins */
+    box-shadow: none; /* Override any generic shadows */
+    overflow: hidden;
+}
+
+#my-trips .trips-content-area .map-wrapper #map,
+#my-trips .trips-content-area .map-wrapper .map-box {
+    width: 100%;
+    height: 100%;
+}
+
+/* ============================================= */
+/* === CHAT INTERFACE (OVERLAY) === */
+/* ============================================= */
+.chat-wrapper {
+    position: fixed;
+    bottom: 20px;
+    right: 20px;
+    width: 350px;
+    height: 450px; /* Make taller */
+    max-width: calc(100vw - 40px);
+    background: linear-gradient(135deg, #f0f4ff, #e0e7ff);
+    border-radius: var(--ios-radius-large);
+    box-shadow: var(--shadow-strong);
+    border: var(--hairline) solid var(--ios-separator);
+    display: flex;
+    flex-direction: column;
+    justify-content: center; /* Center vertically */
+    align-items: center;     /* Center horizontally */
+    text-align: center;
+    z-index: 100;
+    overflow: hidden;
+}
+
+.chat-header {
+  display: none !important; /* force hide if needed */
+}
+
+.chat-wrapper.hidden {
+    transform: translateY(calc(100% + 30px)); /* Slide completely out of viewport */
+    opacity: 0;
+    pointer-events: none;
+}
+
+.chat-wrapper::before {
+  content: "How can I help you plan your trip?";
+  font-size: 1.3rem;
+  font-weight: 600;
+  padding: 0 20px;
+  max-width: 80%;
+  text-align: center;
+  line-height: 1.5;
+  margin-top: 160px;
+
+  /* Gradient text styling */
+  background: linear-gradient(to right, #0a1f44, #1a2e5b);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text; /* Firefox support */
+  color: transparent;
+}
+
+
+/* Floating Action Button to toggle chat */
+.chat-toggle-button { /* This is for the #chat-toggle-fab (ID selector in HTML) */
+    position: fixed;
+    bottom: 25px;
+    right: 25px;
+    background-color: var(--ios-tint);
+    color: white;
+    border: none;
+    border-radius: 50%;
+    width: 50px;
+    height: 50px;
+    font-size: 1.3rem; /* Icon size */
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    box-shadow: var(--shadow-medium);
+    cursor: pointer;
+    z-index: 101; /* Above hidden chat wrapper */
+    transition: transform 0.2s, background-color 0.2s, opacity 0.2s;
+}
+.chat-toggle-button:hover { transform: scale(1.1); }
+
+/* Close button INSIDE the chat window */
+.chat-close-button { /* This is for #close-chat-button (ID selector in HTML) */
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    background: transparent;
+    border: none;
+    color: var(--ios-text-secondary);
+    font-size: 1.2rem;
+    padding: 5px;
+    line-height: 1;
+    cursor: pointer;
+    z-index: 1; /* Above chat-header */
+}
+.chat-close-button:hover { color: var(--ios-text-primary); }
+
+.messages-history {
+    flex-grow: 1;
+    padding: 15px;
+    overflow-y: auto;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+.message-bubble {
+    padding: 8px 12px;
+    border-radius: var(--ios-radius-medium);
+    max-width: 85%;
+    word-wrap: break-word;
+    font-size: 0.9rem;
+    line-height: 1.4;
+}
+.message-bubble.user {
+    background-color: var(--ios-tint);
+    color: white;
+    align-self: flex-end;
+    border-bottom-right-radius: 4px;
+}
+.message-bubble.ai {
+    background-color: var(--ios-fill-secondary);
+    color: var(--ios-text-primary);
+    align-self: flex-start;
+    border-bottom-left-radius: 4px;
+}
+.message-bubble.ai strong { font-weight: 600; }
+.message-bubble.ai ul { padding-left: 20px; margin-top: 5px; margin-bottom: 5px; }
+
+.chat-error-message {
+    padding: 0 15px 10px 15px;
+    font-size: 0.8rem;
+    color: var(--ios-red, #ff3b30); /* Add --ios-red to :root if not there */
+    text-align: center;
+    flex-shrink: 0;
+}
+
+.chat-input {
+    display: flex;
+    border-top: var(--hairline) solid var(--ios-separator);
+    padding: 0.75rem;
+    flex-shrink: 0;
+}
+.chat-input input {
+    flex: 1;
+    padding: 0.6em 1em;
+    border-radius: 999px;
+    border: var(--hairline) solid var(--ios-separator);
+    font-size: 1rem;
+    background: var(--ios-bg-primary);
+    outline: none;
+    margin-right: 0.5rem;
+    color: var(--ios-text-primary);
+}
+.chat-input input::placeholder { color: var(--ios-text-secondary); }
+.chat-input button {
+    background: var(--ios-tint);
+    color: white;
+    border: none;
+    padding: 0.6em; /* Adjusted for round button */
+    width: 40px; /* Fixed width for round button */
+    height: 40px; /* Fixed height for round button */
+    border-radius: 50%;
+    cursor: pointer;
+    font-size: 1.1rem; /* Icon size */
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+/* ============================================= */
+/* === MAP ELEMENTS (Reset, Carousel, Popups) === */
+/* ============================================= */
+/* Reset Map Button */
+.reset-button { /* ID selector in HTML */
+    position: absolute;
+    bottom: 20px;
+    right: 15px;
+    background-color: rgba(var(--rgb-bg-primary, 255,255,255), 0.8); /* Added fallback for --rgb values */
+    backdrop-filter: saturate(180%) blur(10px);
+    border: var(--hairline) solid var(--ios-separator);
+    border-radius: 50%;
+    width: 40px;
+    height: 40px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    box-shadow: var(--shadow-medium);
+    z-index: 5; /* Above map, below chat/timeline */
+    color: var(--ios-text-primary);
+    font-size: 1rem;
+    transition: background-color 0.2s, transform 0.2s, color 0.3s, border-color 0.3s;
+}
+body.dark-mode .reset-button {
+    background-color: rgba(var(--rgb-bg-primary, 33,33,33), 0.8);
+}
+.reset-button:hover { background-color: rgba(var(--rgb-bg-secondary, 242,242,247), 0.9); }
+body.dark-mode .reset-button:hover { background-color: rgba(var(--rgb-bg-secondary, 54,51,51), 0.9); }
+.reset-button:active { transform: scale(0.95); }
+
+/* Card Carousel - Ensure specificity if styles conflict with style.css */
+#my-trips .carousel-overlay { /* Specific to #my-trips to avoid conflict */
+    position: absolute;
+    bottom: 15px;
+    left: 15px;
+    right: 15px;
+    z-index: 5; /* Above map, below chat/timeline */
+    /* height is determined by .card-carousel */
+}
+
+#my-trips .card-carousel {
+    height: 110px; /* Adjust height as needed */
+    overflow: hidden;
+    display: none; /* Hidden by default, shown by JS */
+}
+
+#my-trips .card-container {
+    display: flex;
+    overflow-x: auto;
+    scroll-behavior: smooth;
+    padding-bottom: 15px; /* Space for scrollbar if needed, hides it */
+    margin-bottom: -15px; /* Counteract padding */
+    gap: 10px;
+    height: 100%;
+    -ms-overflow-style: none;  /* IE and Edge */
+    scrollbar-width: none;  /* Firefox */
+}
+#my-trips .card-container::-webkit-scrollbar { display: none; } /* Chrome, Safari, Opera */
+
+/* Location Card */
+#my-trips .location-card {
+    flex: 0 0 240px;
+    max-width: 240px;
+    height: 85px;
+    background-color: var(--ios-bg-primary);
+    border-radius: var(--ios-radius-medium);
+    border: var(--hairline) solid var(--ios-separator);
+    box-shadow: var(--shadow-subtle);
+    overflow: hidden;
+    cursor: pointer;
+    display: flex;
+    opacity: 0.7;
+    transition: opacity 0.3s, transform 0.3s, border-color 0.3s, background-color 0.3s;
+    position: relative;
+}
+#my-trips .location-card:hover { opacity: 0.9; }
+#my-trips .location-card.card-active {
+    opacity: 1;
+    transform: scale(1.03);
+    border: 1.5px solid var(--ios-tint);
+    box-shadow: var(--shadow-medium);
+}
+#my-trips .card-image {
+    width: 85px; height: 100%; background-size: cover; background-position: center; flex-shrink: 0;
+}
+#my-trips .card-content {
+    padding: 8px 10px; overflow: hidden; display: flex; flex-direction: column; justify-content: center; flex-grow: 1;
+}
+#my-trips .card-title {
+    font-size: 0.9rem; font-weight: 600; color: var(--ios-text-primary); margin: 0 0 3px 0;
+    white-space: nowrap; overflow: hidden; text-overflow: ellipsis; transition: color 0.3s;
+}
+#my-trips .card-description {
+    font-size: 0.75rem; color: var(--ios-text-secondary); margin: 0; line-height: 1.3; max-height: 2.6em; /* Limit to 2 lines */
+    overflow: hidden; text-overflow: ellipsis; display: -webkit-box; -webkit-box-orient: vertical; transition: color 0.3s;
+}
+#my-trips .card-duration { font-size: 0.7rem; color: var(--ios-text-secondary); margin-top: 3px; }
+#my-trips .card-day-indicator { /* New for general tab cards */
+    font-size: 0.7rem; color: var(--ios-tint); margin-top: 4px; font-weight: 500;
+}
+/* Badges for Planner Mode Cards */
+#my-trips .card-sequence-badge, #my-trips .card-time-badge {
+    position: absolute; top: 5px; background-color: rgba(0,0,0,0.6); color: white;
+    font-size: 0.7rem; font-weight: bold; padding: 2px 5px; border-radius: 4px; z-index: 1;
+}
+#my-trips .card-sequence-badge { left: 5px; }
+#my-trips .card-time-badge { right: 5px; }
+
+/* Carousel Controls */
+#my-trips .carousel-controls {
+    position: absolute; bottom: 0px; left: 50%; transform: translateX(-50%);
+    display: flex; align-items: center; gap: 10px; z-index: 6; /* Above cards */
+}
+#my-trips .carousel-arrow {
+    background: none; border: none; color: var(--ios-text-primary); font-size: 1.1rem;
+    cursor: pointer; padding: 5px; opacity: 0.7; transition: opacity 0.2s, color 0.3s;
+}
+#my-trips .carousel-arrow:hover { opacity: 1; }
+#my-trips .carousel-indicators { display: flex; gap: 6px; }
+#my-trips .carousel-dot {
+    width: 7px; height: 7px; background-color: var(--ios-separator); border-radius: 50%;
+    cursor: pointer; transition: background-color 0.3s;
+}
+#my-trips .carousel-dot.active { background-color: var(--ios-tint); }
+
+/* Map Popup */
+.popup-container { /* Generic, applies everywhere */
+    position: absolute; transform: translate(-50%, -110%); z-index: 10;
+}
+.popup-bubble {
+    background: rgba(var(--rgb-bg-primary, 255,255,255), 0.9); backdrop-filter: saturate(180%) blur(10px);
+    padding: 10px 15px; border-radius: var(--ios-radius-medium); box-shadow: var(--shadow-medium);
+    border: var(--hairline) solid var(--ios-separator); max-width: 250px;
+    font-size: 0.9rem; color: var(--ios-text-primary);
+    transition: background-color 0.3s, border-color 0.3s, color 0.3s;
+}
+body.dark-mode .popup-bubble {
+    background: rgba(var(--rgb-bg-primary, 33,33,33), 0.9);
+}
+.popup-bubble b { font-weight: 600; display: block; margin-bottom: 4px; }
+
+/* Map Spinner */
+#map-spinner { /* ID selector in HTML */
+    position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); z-index: 20;
+}
+#map-spinner.hidden { display: none; }
+.spinner-visual {
+    border: 4px solid rgba(var(--rgb-text-primary, 0,0,0), 0.1); /* Added rgb fallback */
+    border-left-color: var(--ios-tint);
+    border-radius: 50%; width: 30px; height: 30px; animation: spin 1s linear infinite;
+}
+body.dark-mode .spinner-visual {
+    border: 4px solid rgba(var(--rgb-text-primary, 224,224,224), 0.1);
+    border-left-color: var(--ios-tint);
+}
+@keyframes spin { to { transform: rotate(360deg); } }
+
+/* ============================================= */
+/* === TIMELINE PANEL (OVERLAY) === */
+/* ============================================= */
+.timeline-container {
+    position: fixed;
+    top: 0;
+    right: -380px; /* Start off-screen */
+    width: 360px;
+    max-width: 90vw;
+    height: 100%;
+    background-color: var(--ios-bg-secondary);
+    border-left: var(--hairline) solid var(--ios-separator);
+    box-shadow: -2px 0 15px rgba(0,0,0,0.1);
+    z-index: 105; /* Above chat overlay */
+    display: none; /* Hidden by default, JS uses flex */
+    flex-direction: column;
+    transition: right 0.3s ease-in-out, background-color 0.3s, border-color 0.3s;
+}
+.timeline-container.visible { right: 0; display: flex; } /* display:flex added */
+
+.timeline-header {
+    display: flex; justify-content: space-between; align-items: center;
+    padding: 15px 20px; border-bottom: var(--hairline) solid var(--ios-separator);
+    flex-shrink: 0; transition: border-color 0.3s;
+}
+.timeline-header h3 {
+    margin: 0; font-size: 1.1rem; font-weight: 600; color: var(--ios-text-primary); transition: color 0.3s;
+}
+.timeline-actions button {
+    background: none; border: none; color: var(--ios-tint); font-size: 1rem;
+    cursor: pointer; padding: 5px; margin-left: 10px; transition: color 0.3s;
+}
+.timeline { flex-grow: 1; overflow-y: auto; padding: 20px; }
+.timeline-item { display: flex; position: relative; margin-bottom: 10px; }
+.timeline-time {
+    flex-basis: 60px; flex-shrink: 0; font-size: 0.8rem; font-weight: 600;
+    color: var(--ios-text-secondary); padding-right: 10px; padding-top: 2px; transition: color 0.3s;
+}
+.timeline-connector { flex-basis: 20px; flex-shrink: 0; position: relative; margin-right: 15px; }
+.timeline-dot {
+    width: 12px; height: 12px; background-color: var(--ios-tint); border-radius: 50%;
+    position: absolute; left: 50%; transform: translateX(-50%); top: 4px; transition: background-color 0.3s;
+}
+.timeline-line {
+    width: 2px; background-color: var(--ios-separator); position: absolute; left: 50%;
+    transform: translateX(-50%); top: 16px; bottom: -10px; transition: background-color 0.3s;
+}
+.timeline-item:last-child .timeline-line { display: none; }
+.timeline-content {
+    background-color: var(--ios-bg-primary); border-radius: var(--ios-radius-medium);
+    padding: 10px 12px; border: var(--hairline) solid var(--ios-separator);
+    flex-grow: 1; cursor: pointer; transition: border-color 0.3s, background-color 0.3s, box-shadow 0.2s;
+}
+.timeline-content:hover { border-color: var(--ios-tint); }
+.timeline-content.active { border-color: var(--ios-tint); box-shadow: 0 0 0 1.5px var(--ios-tint); }
+.timeline-title {
+    font-size: 0.95rem; font-weight: 600; margin-bottom: 4px; color: var(--ios-text-primary); transition: color 0.3s;
+}
+.timeline-description {
+    font-size: 0.85rem; color: var(--ios-text-secondary); line-height: 1.4; transition: color 0.3s;
+}
+.timeline-duration {
+    font-size: 0.75rem; color: var(--ios-text-secondary); margin-top: 5px; opacity: 0.8; transition: color 0.3s;
+}
+.timeline-duration i { margin-right: 4px; }
+
+/* Transport items in timeline */
+.transport-item .timeline-dot { background-color: #aaa; }
+/* .transport-item .timeline-line { background-color: #ccc; } */ /* Covered by default timeline-line */
+.transport-item .timeline-content {
+    background-color: transparent; border: none; padding: 5px 0 15px 0; cursor: default;
+}
+.transport-item .timeline-title { font-size: 0.85rem; font-weight: 500; color: var(--ios-text-secondary); }
+.transport-item .timeline-title i { margin-right: 6px; color: var(--ios-text-secondary); }
+/* .transport-item .timeline-duration { margin-top: 2px; font-size: 0.7rem; } */ /* Covered by default */
+
+/* Mobile specific timeline toggle/overlay */
+.timeline-toggle { /* ID selector in HTML */
+    display: none; /* Hidden by default, shown for mobile via @media */
+    position: fixed; bottom: 90px; /* Above chat FAB */ right: 15px;
+    background-color: var(--ios-tint); color: white; border: none; border-radius: 50%;
+    width: 50px; height: 50px; align-items: center; justify-content: center;
+    font-size: 1.2rem; box-shadow: var(--shadow-medium); z-index: 106; /* Above timeline */
+    cursor: pointer;
+}
+
+/* Map overlay for mobile timeline interaction (if needed) */
+.map-overlay.visible { /* class applied by JS */
+    /* ... (styles from previous response if map interaction needs to be blocked) ... */
+    position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+    background-color: rgba(0,0,0,0.4);
+    z-index: 104; /* Below timeline, above chat if timeline is modal */
+    opacity: 0; transition: opacity 0.3s; pointer-events: none;
+}
+.map-overlay.visible.active { /* JS toggles .active on .visible */
+    opacity: 1; pointer-events: auto; display: block;
+}
+
+
+/* ============================================= */
+/* === RESPONSIVE ADJUSTMENTS === */
+/* ============================================= */
+@media (max-width: 768px) {
+    #my-trips.section.active {
+        height: calc(100vh - 56px); /* Adjust if mobile navbar height is different */
+    }
+    .day-tabs-bar-container { padding: 6px 10px; }
+    .day-tab { padding: 6px 10px; font-size: 0.85rem; }
+
+    .chat-wrapper {
+        width: calc(100% - 30px); /* Wider on mobile */
+        bottom: 15px;
+        right: 15px;
+        max-height: 60vh;
+    }
+    .chat-toggle-button { /* The FAB */
+        bottom: 20px;
+        right: 20px;
+    }
+
+    /* Timeline adjustments for mobile */
+    .timeline-toggle { display: flex; } /* Show mobile timeline toggle */
+    .timeline-container { /* Becomes a bottom sheet */
+        width: 100%;
+        max-width: 100%;
+        height: 70vh;
+        top: auto;
+        bottom: -70vh; /* Start off bottom */
+        left: 0;
+        right: auto; /* Override desktop style */
+        border-left: none;
+        border-top: var(--hairline) solid var(--ios-separator);
+        border-radius: var(--ios-radius-large) var(--ios-radius-large) 0 0;
+        transition: bottom 0.3s ease-in-out;
+    }
+    .timeline-container.visible { bottom: 0; right: auto; }
+
+    /* Adjust card carousel & reset button for mobile */
+    #my-trips .carousel-overlay { bottom: 10px; left: 10px; right: 10px; }
+    #my-trips .card-carousel { height: 100px;}
+    #my-trips .location-card { height: 75px; flex-basis: 200px; max-width: 200px;}
+    #my-trips .card-image { width: 75px; }
+    .reset-button { bottom: 80px; right: 10px; /* Position above timeline toggle & chat FAB */ }
+    
+    /* If chat is open and timeline is open, might need to adjust timeline FAB */
+    /* This is complex and depends on exact interaction flow desired. */
+}
+
+/* Helper for when timeline shifts map layout (desktop) */
+#my-trips.timeline-shifted .trips-content-area .map-wrapper {
+    /* Example: margin-right: 360px; /* Width of timeline */
+    /* Or use transform: translateX(-180px) and adjust map center if preferred */
+    /* The map.panBy() in JS is generally better for map center. */
+    /* This class is just a hook if CSS layout adjustments are also needed. */
+}
+
+/* Fallback for CSS variables not defined in :root of style.css */
+:root {
+  --ios-fill-tertiary: #e0e0e0; /* Example fallback */
+  --shadow-strong: 0 8px 16px rgba(0,0,0,0.15); /* Example fallback */
+  --shadow-medium: 0 4px 8px rgba(0,0,0,0.1); /* Example fallback */
+  --shadow-subtle: 0 2px 4px rgba(0,0,0,0.05); /* Example fallback */
+  --ios-red: #ff3b30; /* Standard iOS red */
+
+  /* Define --rgb versions for rgba() if not already defined in style.css */
+  --rgb-bg-primary: 255, 255, 255;
+  --rgb-bg-secondary: 242, 242, 247;
+  --rgb-text-primary: 0, 0, 0;
+}
+body.dark-mode {
+  --ios-fill-tertiary: #48484a;
+  --rgb-bg-primary: 33, 33, 33;
+  --rgb-bg-secondary: 54, 51, 51;
+  --rgb-text-primary: 224, 224, 224;
+}
+
+/* In your map-explorer.css or main style.css */
+
+/* Ensure card-image can contain the img tag correctly */
+.card-image {
+    width: 100%; /* For landscape cards, image width is 100% of this container */
+    height: 85px; /* For landscape cards, image height is fixed if card-image is inside location-card like current setup */
+                 /* If .card-image is for a taller card, adjust height here e.g. 180px */
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+    background-color: var(--ios-fill-secondary, #e0e0e0); /* Fallback color */
+    position: relative;
+    overflow: hidden; /* Clips the img tag if it's larger than this container */
+}
+/* This style is from your #my-trips .card-image */
+#my-trips .card-image {
+    width: 85px; /* Square image area for the small cards */
+    height: 100%; /* Takes full height of .location-card (85px) */
+    background-size: cover;
+    background-position: center;
+    flex-shrink: 0;
+}
+
+.card-img-tag {
+    width: 100%;
+    height: 100%;
+    object-fit: cover; /* Ensures the image covers the area, might crop */
+    display: block; /* Remove extra space below image */
+}
+
+/* Example style for meal items in timeline */
+.timeline-item.meal-item .timeline-dot {
+    background-color: var(--ios-orange, orange) !important; /* Use CSS variable or direct color */
+}
+.timeline-item.meal-item .timeline-title i.fa-utensils {
+    margin-right: 6px;
+    color: var(--ios-orange, orange);
+}
+
+/* To completely hide the blank image area in carousel cards */
+#my-trips .location-card .card-image {
+    display: none; 
+}
+
+/* Styling for day indicator on cards when on "General" tab */
+#my-trips .card-day-indicator {
+    font-size: 0.65rem;
+    color: var(--ios-text-tertiary);
+    background-color: var(--ios-fill-tertiary);
+    padding: 1px 5px;
+    border-radius: 4px;
+    position: absolute;
+    bottom: 5px;
+    right: 5px;
+    font-weight: 500;
+}
+
+/* Add to map-explorer.css */
+#my-trips .card-day-indicator {
+    font-size: 0.65rem;
+    color: var(--ios-text-tertiary);
+    background-color: var(--ios-fill-tertiary);
+    padding: 1px 5px;
+    border-radius: 4px;
+    position: absolute;
+    bottom: 5px;
+    right: 5px;
+    font-weight: 500;
+}
+
+/* Optional: For meal items in timeline if your backend provides 'type' */
+.timeline-item.meal-item .timeline-dot {
+    background-color: var(--ios-orange, orange) !important;
+}
+.timeline-item.meal-item .timeline-title i.fa-utensils {
+    margin-right: 6px;
+    color: var(--ios-orange, orange);
+}
+
+/* Add to map-explorer.css */
+.popup-bubble .map-popup-content-wrapper {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+
+
+/* In map-explorer.css, inside #my-trips .location-card .card-content */
+#my-trips .card-price {
+    font-size: 0.8rem;
+    font-weight: 500;
+    color: var(--ios-green, #34c759); /* Or your preferred color */
+    margin-top: 4px;
+    margin-bottom: 2px;
+}
+
+/* === CAROUSEL CARD STYLING === */
+#my-trips .location-card .card-image {
+    /* This div is now for structure/spacing if needed, or can be hidden if truly not wanted */
+    /* Option 1: Hide it completely if no visual placeholder is desired */
+    display: none; 
+
+    /* Option 2: Give it a fixed size and subtle background (if you want a blank space) */
+    /* width: 85px; */ /* Or whatever width you had */
+    /* height: 100%; */
+    /* background-color: var(--ios-fill-tertiary); */ /* Example subtle background */
+    /* flex-shrink: 0; */
+}
+
+#my-trips .card-price {
+    font-size: 0.8rem;
+    font-weight: 500;
+    color: var(--ios-green, #34c759); /* Define --ios-green or use a direct color */
+    margin-top: 3px; /* Adjust spacing as needed */
+}
+
+
+/* === MAP POPUP IMAGE STYLING === */
+.popup-bubble .map-popup-content-wrapper {
+    display: flex;
+    flex-direction: column; /* Image on top, then text */
+    gap: 8px; /* Space between image and text block */
+}
+
+.popup-bubble .popup-image {
+    width: 100%; /* Take full width of the popup bubble */
+    max-height: 120px; /* Control max image height; adjust as you like */
+    object-fit: cover; /* Cover the area, may crop; use 'contain' to see full image */
+    border-radius: calc(var(--ios-radius-medium) - 8px); /* Slightly rounded corners, less than bubble */
+    display: block; /* Good practice for images */
+}
+
+.popup-bubble .popup-text-content {
+    /* Styles for the text part of the popup */
+}
+
+.popup-bubble .popup-title {
+    font-weight: 600;
+    display: block;
+    margin-bottom: 4px;
+    color: var(--ios-text-primary);
+}
+
+.popup-bubble .popup-description {
+    font-size: 0.85rem;
+    color: var(--ios-text-secondary);
+    line-height: 1.4;
+}
+
+.popup-bubble .popup-time-info {
+    font-size: 0.75em;
+    color: var(--ios-text-tertiary);
+    margin-top: 4px;
+}
+
+/* In your main CSS file (e.g., static/style.css) */
+
+.location-card .card-image {
+    width: 100%;
+    height: 150px; /* Or your desired height for card images */
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+    background-color: #e0e0e0; /* Placeholder color if image fails to load or is missing */
+    border-top-left-radius: 8px; /* Match card's border radius if any */
+    border-top-right-radius: 8px;
+    position: relative; /* For absolute positioning of badges if needed */
+}
+
+/* Optional: if you want badges on top of the image */
+.location-card .card-sequence-badge,
+.location-card .card-time-badge,
+.location-card .card-day-indicator {
+    position: absolute; /* Example: position them on the image */
+    background-color: rgba(0, 0, 0, 0.6);
+    color: white;
+    padding: 4px 8px;
+    border-radius: 4px;
+    font-size: 0.8em;
+}
+
+.location-card .card-sequence-badge {
+    top: 8px;
+    left: 8px;
+}
+
+.location-card .card-time-badge {
+    top: 8px;
+    right: 8px;
+}
+.location-card .card-day-indicator {
+    bottom: 8px;
+    right: 8px;
+}
+
+
+.location-card .card-content {
+    padding: 10px;
+}
+
+/* In your main CSS file (e.g., static/style.css) */
+
+.location-card {
+    /* ... your existing .location-card styles ... */
+    position: relative; /* Add this if you want to position badges absolutely relative to the card */
+    overflow: hidden; /* Good for ensuring child elements conform to rounded corners */
+}
+
+.location-card .card-image {
+    width: 100%;
+    height: 150px; /* Or your desired height for card images */
+    display: flex; /* To center placeholder if needed */
+    align-items: center;
+    justify-content: center;
+    background-color: #e0e0e0; /* Fallback background for the container */
+    overflow: hidden; /* Ensures the img tag respects the container's bounds/radius */
+    border-top-left-radius: 8px; /* If your card has rounded corners */
+    border-top-right-radius: 8px;
+}
+
+.location-card .card-image .card-img-tag {
+    width: 100%;
+    height: 100%;
+    object-fit: cover; /* Crucial: scales image to cover, cropping if necessary */
+    display: block; /* Remove extra space below image */
+}
+
+.location-card .card-image .card-image-placeholder {
+    font-size: 0.9em;
+    color: #888;
+}
+
+
+/* BADGES STYLING - Place these on top of the whole card or image container */
+/* If placing on the image container (.card-image), .card-image needs position: relative */
+/* If placing on the card itself (.location-card), .location-card needs position: relative */
+
+.location-card .card-sequence-badge,
+.location-card .card-time-badge,
+.location-card .card-day-indicator {
+    position: absolute;
+    background-color: rgba(0, 0, 0, 0.65); /* Slightly darker for better contrast */
+    color: white;
+    padding: 3px 7px; /* Adjusted padding */
+    border-radius: 4px;
+    font-size: 0.75em; /* Slightly smaller */
+    z-index: 10; /* Ensure badges are on top */
+    box-shadow: 0 1px 3px rgba(0,0,0,0.3); /* Subtle shadow for depth */
+}
+
+.location-card .card-sequence-badge {
+    top: 8px;
+    left: 8px;
+}
+
+.location-card .card-time-badge {
+    top: 8px;
+    right: 8px;
+}
+.location-card .card-day-indicator {
+    bottom: 8px; /* Adjust if it conflicts with card content */
+    right: 8px;
+    /* If card content is below image, this badge might look better
+       at the bottom of the .card-image div, not the whole card.
+       In that case, make .card-image position:relative and adjust top/left/bottom/right
+       of the badge relative to .card-image.
+       For now, placing it relative to the whole card.
+    */
+}
+
+
+.location-card .card-content {
+    padding: 12px; /* Slightly more padding */
+    background-color: white; /* Ensure card content has a background if card itself is transparent */
+     border-bottom-left-radius: 8px; /* If your card has rounded corners */
+    border-bottom-right-radius: 8px;
+}
+
+/* ============================================= */
+/* MAP POPUP STYLES (Attempt to Override/Ensure) */
+/* ============================================= */
+
+/* The custom overlay view's content container.
+   This is the element to which PopupClassImported adds the 'popup-bubble' class. */
+.popup-bubble {
+    background-color: #ffffff; /* White background */
+    border-radius: 10px;       /* Rounded corners */
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15); /* Softer shadow */
+    font-family: 'Outfit', sans-serif; /* Consistent font */
+    max-width: 300px;          /* Max width of the popup */
+    min-width: 220px;          /* Min width to prevent being too squished */
+    overflow: hidden;          /* CRITICAL: Clips child elements like the image to the rounded corners */
+    padding: 0;                /* Remove padding here; children will handle it */
+    line-height: 1.4;          /* Default line height for text */
+    opacity: 0;                /* Start hidden for potential animation */
+    transform: translateY(10px) scale(0.95); /* Start slightly down and scaled for animation */
+    transition: opacity 0.25s ease-out, transform 0.25s ease-out;
+    z-index: 1000; /* Ensure popups are on top of map elements */
+}
+
+/* Active state for popup when it's meant to be visible */
+/* You'd add/remove this class via JS if you want animations on show/hide */
+.popup-bubble.visible,
+.popup-bubble.popup-active { /* If using popup-active from highlightCard */
+    opacity: 1;
+    transform: translateY(0) scale(1);
+}
+
+
+/* Wrapper for the content *inside* the .popup-bubble */
+.map-popup-content-wrapper {
+    display: flex;
+    flex-direction: column;
+    width: 100%; /* Takes full width of .popup-bubble */
+}
+
+/* The image within the map popup */
+.map-popup-content-wrapper .popup-image {
+    width: 100%;               /* Image takes full width of its container */
+    height: 140px;             /* Fixed height for the image area. ADJUST AS NEEDED. */
+    object-fit: cover;         /* Scale image to cover, crop if necessary. THIS IS KEY. */
+    display: block;            /* Remove extra space below image */
+    background-color: #e9ecef; /* Fallback color if image is slow or fails */
+    /* No border-radius here, as the parent (.popup-bubble) with overflow:hidden handles clipping */
+}
+
+/* Fallback styling for when the image fails to load and JS hides the <img>
+   and adds 'popup-image-failed' to the wrapper or a dedicated placeholder div.
+   Assuming the <img> tag is hidden and we style a placeholder in its container.
+   If the <img> tag is NOT hidden by JS, this won't be visible
+}
+/* If you have a specific placeholder element added by JS: */
+.map-popup-content-wrapper .image-placeholder-icon {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 100%;
+    height: 140px; /* Match image height */
+    background-color: #f0f0f0;
+    color: #adb5bd;
+    font-size: 2.5em; /* For a placeholder icon/text */
+}
+.map-popup-content-wrapper .image-placeholder-icon::before {
+    content: "🖼️"; /* Example placeholder */
+}
+
+
+/* Styling for the text content area below the image */
+.map-popup-content-wrapper .popup-text-content {
+    padding: 12px 15px;      /* Padding around the text */
+    background-color: #ffffff; /* Ensure text area has a solid background if image is transparent */
+}
+
+.map-popup-content-wrapper .popup-title {
+    font-size: 1.1em;        /* Title size */
+    font-weight: 600;        /* Bold title */
+    margin: 0 0 6px 0;       /* Spacing below title */
+    color: #1e2022;          /* Darker text color for title */
+    line-height: 1.3;
+}
+
+.map-popup-content-wrapper .popup-description {
+    font-size: 0.875em;      /* Description text size */
+    color: #45494d;          /* Slightly lighter text for description */
+    line-height: 1.5;
+    margin: 0 0 10px 0;      /* Spacing below description */
+    /* For multi-line ellipsis (optional, browser support varies for -webkit-line-clamp) */
+    /* display: -webkit-box;
+    -webkit-line-clamp: 3;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    max-height: calc(1.5em * 3); */ /* Adjust based on line-height and desired lines */
+}
+
+.map-popup-content-wrapper .popup-time-info,
+.map-popup-content-wrapper .popup-rating {
+    font-size: 0.8em;
+    color: #6c757d;          /* Gray color for metadata */
+    margin-top: 8px;
+    display: flex;
+    align-items: center;
+}
+
+.map-popup-content-wrapper .popup-time-info i,
+.map-popup-content-wrapper .popup-rating i {
+    margin-right: 6px;
+    font-size: 1em; /* Icon size relative to text */
+    color: #868e96; /* Slightly lighter icon color */
+}
+
+/* If you have a class for popups that specifically have no image from the start */
+.map-popup-content-wrapper.no-image-popup .popup-text-content {
+    border-top-left-radius: 10px; /* Apply top radius if no image precedes it */
+    border-top-right-radius: 10px;
+}
+
+/* Ensure the container created by Google Maps OverlayView is transparent
+   and allows our .popup-bubble to define the appearance. */
+.popup-container {
+    /* This is the div that Google Maps OverlayView uses.
+       It should typically not have any visual styles itself.
+       The .popup-bubble is appended *inside* this. */
+    background: transparent !important;
+    border: none !important;
+    padding: 0 !important;
+    box-shadow: none !important;
+}
+

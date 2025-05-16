@@ -1,0 +1,156 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Login / Sign Up - Travel Planner</title>
+  
+  <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+  <link rel="icon" href="{{ url_for('static', filename='img/icon.png') }}" type="image/png">
+
+  <link
+    rel="stylesheet"
+    href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css"
+    integrity="sha512-Avb2QiuDEEvB4bZJYdft2mNjVShBftLdPG8FJ0V7irTLQ8Uo0qcPxh4Plq7G5tGm0rU+1SPhVotteLpBERwTkw=="
+    crossorigin="anonymous"
+    referrerpolicy="no-referrer"
+  /> 
+   <style>
+    @import url('https://fonts.googleapis.com/css2?family=Outfit:wght@100..900&display=swap');
+  </style>
+</head>
+<body class="auth-page-wrapper"> 
+
+  <div class="auth-card"> 
+    <div class="auth-tabs"> 
+      <button id="loginBtn" class="auth-tab-button active">Login</button> 
+      <button id="signupBtn" class="auth-tab-button">Sign Up</button>
+    </div>
+
+    <form id="loginForm" class="auth-form"> 
+      <div class="form-group">
+        <i class="fas fa-envelope input-icon"></i>
+        <input type="email" id="loginEmail" placeholder="Email" required />
+      </div>
+      <div class="form-group">
+        <i class="fas fa-lock input-icon"></i>
+        <input type="password" id="loginPassword" placeholder="Password" required />
+      </div>
+      <button id="loginSubmit" type="submit" class="btn">Login</button>
+      <div id="loginError" class="error-message"></div>
+    </form>
+
+    <form id="signupForm" class="auth-form hidden"> 
+      <div class="form-group">
+        <i class="fas fa-user input-icon"></i>
+        <input type="text" id="signupUsername" placeholder="Username" required />
+      </div>
+      <div class="form-group">
+        <i class="fas fa-envelope input-icon"></i>
+        <input type="email" id="signupEmail" placeholder="Email" required />
+      </div>
+      <div class="form-group">
+        <i class="fas fa-lock input-icon"></i>
+        <input type="password" id="signupPassword" placeholder="Password" required />
+      </div>
+      <button id="signupSubmit" type="submit" class="btn">Sign Up</button>
+      <div id="signupError" class="error-message"></div>
+    </form>
+  </div>
+
+  <script type="module">
+    // Simplified version of your authentication.js logic for tab switching
+    // Your full authentication.js would handle Firebase interactions
+
+    const loginBtn = document.getElementById('loginBtn');
+    const signupBtn = document.getElementById('signupBtn');
+    const loginForm = document.getElementById('loginForm');
+    const signupForm = document.getElementById('signupForm');
+
+    // Firebase and your login/signup JS for actual auth
+    // This is just for the UI tab switching
+     import { auth } from '{{ url_for("static", filename="firebase-config.js") }}';
+     import { 
+         signInWithEmailAndPassword, 
+         createUserWithEmailAndPassword,
+         updateProfile
+     } from "https://www.gstatic.com/firebasejs/9.6.1/firebase-auth.js";
+
+    const loginErrorMessage = document.getElementById('loginError');
+    const signupErrorMessage = document.getElementById('signupError');
+
+
+    loginBtn.addEventListener('click', () => {
+        loginForm.classList.remove('hidden');
+        signupForm.classList.add('hidden');
+        loginBtn.classList.add('active');
+        signupBtn.classList.remove('active');
+    });
+
+    signupBtn.addEventListener('click', () => {
+        signupForm.classList.remove('hidden');
+        loginForm.classList.add('hidden');
+        signupBtn.classList.add('active');
+        loginBtn.classList.remove('active');
+    });
+
+    // --- Your existing Firebase logic from login.html example ---
+     loginForm.addEventListener('submit', (e) => {
+         e.preventDefault();
+         const email = loginForm.loginEmail.value; 
+         const password = loginForm.loginPassword.value; 
+         if(loginErrorMessage) loginErrorMessage.textContent = '';
+
+         signInWithEmailAndPassword(auth, email, password)
+             .then((userCredential) => {
+                 console.log("User logged in:", userCredential.user);
+                 window.location.href = "{{ url_for('dashboard') }}";
+             })
+             .catch((error) => {
+                 console.error("Login error:", error);
+                 if(loginErrorMessage) loginErrorMessage.textContent = error.message.replace('Firebase: ', '');
+             });
+     });
+
+     signupForm.addEventListener('submit', (e) => {
+         e.preventDefault();
+         const username = signupForm.signupUsername.value; 
+         const email = signupForm.signupEmail.value; 
+         const password = signupForm.signupPassword.value; 
+        if(signupErrorMessage)  signupErrorMessage.textContent = '';
+
+         createUserWithEmailAndPassword(auth, email, password)
+             .then((userCredential) => {
+                 const user = userCredential.user;
+                 return updateProfile(user, { displayName: username });
+             })
+             .then(() => {
+                 console.log("User signed up and profile updated:", auth.currentUser);
+                 fetch("{{ url_for('preference_route') }}", { 
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ 
+                        username: auth.currentUser.displayName || auth.currentUser.email, 
+                        dietary: [], 
+                        allergies: "", 
+                        interests: [] 
+                    })
+                 })
+                 .then(response => response.json())
+                 .then(data => {
+                    console.log("Initial preferences save attempt:", data.message || data.error);
+                    window.location.href = "{{ url_for('preference_route') }}"; 
+                 })
+                 .catch(prefError => {
+                    console.error("Error saving initial preferences:", prefError);
+                    window.location.href = "{{ url_for('preference_route') }}"; 
+                 });
+             })
+             .catch((error) => {
+                 console.error("Signup error:", error);
+                if(signupErrorMessage) signupErrorMessage.textContent = error.message.replace('Firebase: ', '');
+             });
+     });
+  </script>
+</body>
+</html>

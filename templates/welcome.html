@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Altinerary — Welcome</title>
+  <link rel="icon" href="{{ url_for('static', filename='img/icon.png') }}" type="image/png">
+  <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Outfit:wght@100..900&display=swap');
+    </style>
+</head>
+<body>
+  <!-- Add ID 'welcome' here -->
+  <div class="welcome-container" id="welcome">
+    <img src="{{ url_for('static', filename='img/logo.png') }}" alt="Altinerary Logo" class="logo">
+
+    <p class="tagline">Plan your perfect trip with ease, powered by AI.</p>
+
+    <!-- Add ID 'startBtn' here -->
+    <a href="{{ url_for('login') }}" class="btn" id="startBtn">Get Started</a>
+  </div>
+
+  <script src="{{ url_for('static', filename='index.js') }}"></script>
+</body>
+</html>

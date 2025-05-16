@@ -1,0 +1,31 @@
+{
+    "hi ": {
+        "dietary": [
+            "vegetarian",
+            "pescatarian"
+        ],
+        "allergies": "",
+        "interests": [
+            "hiking",
+            "historical-sites",
+            "art-galleries"
+        ]
+    },
+    "hi1": {
+        "dietary": [],
+        "allergies": "",
+        "interests": []
+    },
+    "Max": {
+        "dietary": [],
+        "allergies": "",
+        "interests": [
+            "museums",
+            "shopping",
+            "gardens",
+            "art-galleries",
+            "historical-sites",
+            "restaurants"
+        ]
+    }
+}

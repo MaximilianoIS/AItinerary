@@ -1,0 +1,217 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sign Up - Your Preferences</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}" />
+    <style>
+        /* Basic Reset and General Styles */
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
+            margin: 0;
+            background-color: #f2f2f7; /* Light gray iOS background */
+            color: #000; /* Default iOS text color */
+            -webkit-font-smoothing: antialiased;
+            -moz-osx-font-smoothing: grayscale;
+        }
+
+        .container {
+            max-width: 600px; /* Narrower for iOS feel */
+            margin: 50px auto;
+            padding: 20px;
+        }
+
+        h1, h2 {
+            text-align: center;
+            color: #000;
+            font-weight: bold;
+        }
+
+        h1 {
+            font-size: 24px;
+            margin-bottom: 20px;
+        }
+
+        h2 {
+            font-size: 18px;
+            margin-top: 20px;
+            margin-bottom: 10px;
+        }
+
+        .preferences-section {
+            background-color: #fff; /* White iOS card background */
+            border-radius: 10px;
+            padding: 15px;
+            margin-bottom: 20px;
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1); /* Subtle iOS shadow */
+        }
+
+        .form-group {
+            margin-bottom: 15px;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 5px;
+            font-weight: bold;
+        }
+
+        .form-group input[type="text"] {
+            width: 100%;
+            padding: 10px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            box-sizing: border-box;
+            font-size: 16px;
+        }
+
+        /* Card-like checkboxes */
+        .card-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+            gap: 10px;
+            margin-bottom: 15px;
+        }
+
+        .preference-card {
+            background-color: #fff;
+            border-radius: 8px;
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+            padding: 15px;
+            text-align: center;
+            cursor: pointer;
+            border: 2px solid transparent; /* For selection highlight */
+        }
+
+        .preference-card label {
+            display: block;
+            margin-top: 5px;
+            font-size: 16px;
+        }
+
+        .preference-card.selected {
+            background-color: #007aff; /* iOS blue selection color */
+            color: #fff;
+            border-color: #007aff;
+        }
+
+        button {
+            display: block;
+            width: 100%;
+            padding: 15px;
+            background-color: #007aff; /* iOS blue button */
+            color: white;
+            border: none;
+            border-radius: 10px;
+            cursor: pointer;
+            font-size: 18px;
+            font-weight: bold;
+            margin-top: 20px;
+        }
+
+        button:hover {
+            opacity: 0.8;
+        }
+
+        .error {
+            color: red;
+            margin-top: 10px;
+            text-align: center;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Tell us about your preferences!</h1>
+
+        <section class="preferences-section" id="dietary-preferences">
+            <h2>Dietary Preferences:</h2>
+            <div class="card-grid" id="dietary-cards">
+                <div class="preference-card" onclick="toggleDietary('vegetarian')">
+                    <label for="vegetarian">Vegetarian</label>
+                </div>
+                <div class="preference-card" onclick="toggleDietary('vegan')">
+                    <label for="vegan">Vegan</label>
+                </div>
+                <div class="preference-card" onclick="toggleDietary('gluten-free')">
+                    <label for="gluten-free">Gluten-Free</label>
+                </div>
+                <div class="preference-card" onclick="toggleDietary('dairy-free')">
+                    <label for="dairy-free">Dairy-Free</label>
+                </div>
+                <div class="preference-card" onclick="toggleDietary('pescatarian')">
+                    <label for="pescatarian">Pescatarian</label>
+                </div>
+                <div class="preference-card" onclick="toggleDietary('halal')">
+                    <label for="halal">Halal</label>
+                </div>
+                <div class="preference-card" onclick="toggleDietary('kosher')">
+                    <label for="kosher">Kosher</label>
+                </div>
+                <div class="preference-card" onclick="toggleDietary('low-carb')">
+                    <label for="low-carb">Low Carb</label>
+                </div>
+                <div class="preference-card" onclick="toggleDietary('paleo')">
+                    <label for="paleo">Paleo</label>
+                </div>
+                <div class="preference-card" onclick="toggleDietary('whole30')">
+                    <label for="whole30">Whole30</label>
+                </div>
+                </div>
+            <div class="form-group">
+                <label for="allergies">Special Allergies (Optional):</label>
+                <input type="text" id="allergies" name="allergies">
+            </div>
+        </section>
+
+        <section class="preferences-section" id="interests">
+            <h2>Preferred Places & Interests:</h2>
+            <div class="card-grid" id="interest-cards">
+                <div class="preference-card" onclick="toggleInterest('museums')">
+                    <label for="museums">Museums</label>
+                </div>
+                <div class="preference-card" onclick="toggleInterest('parks')">
+                    <label for="parks">Parks</label>
+                </div>
+                <div class="preference-card" onclick="toggleInterest('restaurants')">
+                    <label for="restaurants">Restaurants</label>
+                </div>
+                <div class="preference-card" onclick="toggleInterest('hiking')">
+                    <label for="hiking">Hiking Trails</label>
+                </div>
+                <div class="preference-card" onclick="toggleInterest('historical-sites')">
+                    <label for="historical-sites">Historical Sites</label>
+                </div>
+                <div class="preference-card" onclick="toggleInterest('live-music')">
+                    <label for="live-music">Live Music</label>
+                </div>
+                <div class="preference-card" onclick="toggleInterest('shopping')">
+                    <label for="shopping">Shopping</label>
+                </div>
+                <div class="preference-card" onclick="toggleInterest('art-galleries')">
+                    <label for="art-galleries">Art Galleries</label>
+                </div>
+                <div class="preference-card" onclick="toggleInterest('beaches')">
+                    <label for="beaches">Beaches</label>
+                </div>
+                <div class="preference-card" onclick="toggleInterest('nightlife')">
+                    <label for="nightlife">Nightlife</label>
+                </div>
+                <div class="preference-card" onclick="toggleInterest('local-markets')">
+                    <label for="local-markets">Local Markets</label>
+                </div>
+                <div class="preference-card" onclick="toggleInterest('gardens')">
+                    <label for="gardens">Gardens</label>
+                </div>
+                </div>
+        </section>
+
+        <button type="button" onclick="submitPreferences()">Save Preferences</button>
+        <p id="error-message" class="error"></p>
+    </div>
+
+    <script type="module" src="/static/preference.js"></script>
+      
+</body>
+</html>
