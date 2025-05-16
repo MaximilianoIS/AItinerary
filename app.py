@@ -180,7 +180,7 @@ def welcome():
     return render_template("welcome.html")
 
 @app.route("/login")
-def index():
+def login():
     firebase_config = {
         "apiKey": os.getenv("FIREBASE_API_KEY"),
         "authDomain": os.getenv("FIREBASE_AUTH_DOMAIN"),
@@ -244,7 +244,6 @@ def dashboard():
         "dashboard.html",
         google_maps_api_key=GOOGLE_MAPS_API_KEY_FRONTEND or "",
     )
-
 
 
 
