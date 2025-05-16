@@ -490,8 +490,8 @@
 
 <script>
   window.FRONTEND_CONFIG = {
-    GEMINI_API_KEY: "",
-    GOOGLE_MAPS_API_KEY: ""
+    GEMINI_API_KEY: "{{ gemini_api_key | escape | safe }}",
+    GOOGLE_MAPS_API_KEY: "{{ google_maps_api_key_frontend | escape | safe }}"
   };
 </script>
   <!-- ======================= -->
