@@ -242,7 +242,10 @@ def preference_route():
 def dashboard():
     return render_template(
         "dashboard.html",
-        google_maps_api_key=GOOGLE_MAPS_API_KEY_FRONTEND or "",
+        FRONTEND_CONFIG={
+            "GEMINI_API_KEY": os.getenv("GEMINI_API_KEY"),
+            "GOOGLE_MAPS_API_KEY": GOOGLE_MAPS_API_KEY_FRONTEND
+        }
     )
 
 
