@@ -1,4 +1,4 @@
-# Travel Planner Web App
+# AItinerary
 
 This is a Flask-based web application that helps users generate travel plans using the Gemini API. It includes:
 
